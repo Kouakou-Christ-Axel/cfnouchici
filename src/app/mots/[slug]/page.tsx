@@ -8,7 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, Quote, User, CalendarDays } from "lucide-react";
 import { categoryColor, categoryLabel } from "@/lib/category";
-import { WordInteractions } from "@/components/public/mots/word-interactions";
+import { VoteSection } from "@/components/public/mots/vote-section";
 import { ScrollToTop } from "@/components/ui/scroll-to-top";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -125,8 +125,8 @@ export default async function MotDetailPage({
 
 					<Separator />
 
-					{/* Interactions : vote + commentaires */}
-					<WordInteractions initialLikes={0} />
+					{/* Interactions : vote communautaire */}
+					<VoteSection slug={slug} />
 				</div>
 
 				{/* Sidebar */}
