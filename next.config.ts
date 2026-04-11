@@ -1,12 +1,8 @@
 import type {NextConfig} from "next";
-// Enable calling `getCloudflareContext()` in `next dev`.
-// See https://opennext.js.org/cloudflare/bindings#local-access-to-bindings.
-import {initOpenNextCloudflareForDev} from "@opennextjs/cloudflare";
 
 const nextConfig: NextConfig = {
-	serverExternalPackages: ["@prisma/client", ".prisma/client"],
+	output: "standalone",
+	serverExternalPackages: ["@prisma/client", "@prisma/adapter-pg"],
 };
 
 export default nextConfig;
-
-initOpenNextCloudflareForDev();

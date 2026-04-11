@@ -79,7 +79,7 @@ function Navbar() {
 				<ThemeSwitcher/>
 				{user ? (
 					<>
-						{(user.role === "MODERATEUR" || user.role === "ADMIN") && (
+						{(((user as { role?: string }).role === "MODERATEUR") || ((user as { role?: string }).role === "ADMIN")) && (
 							<NavbarItem>
 								<Link href="/admin" aria-label="Administration">
 									<Shield className="size-4" />
