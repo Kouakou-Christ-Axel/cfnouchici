@@ -14,9 +14,13 @@ import { ScrollToTop } from "@/components/ui/scroll-to-top";
 export const revalidate = 3600;
 
 export async function generateStaticParams() {
-	const mots = await listAllMotsValides();
-	const letters = [...new Set(mots.map((m) => m.mot[0].toLowerCase()))];
-	return letters.map((lettre) => ({ lettre }));
+	try {
+		const mots = await listAllMotsValides();
+		const letters = [...new Set(mots.map((m) => m.mot[0].toLowerCase()))];
+		return letters.map((lettre) => ({ lettre }));
+	} catch {
+		return [];
+	}
 }
 
 export async function generateMetadata({

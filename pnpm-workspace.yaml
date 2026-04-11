@@ -1,0 +1,7 @@
+ignoredBuiltDependencies:
+  - '@heroui/shared-utils'
+  - '@prisma/engines'
+  - msw
+  - prisma
+  - sharp
+  - unrs-resolver

@@ -18,8 +18,12 @@ import { db } from "@/lib/db";
 export const revalidate = 3600;
 
 export async function generateStaticParams() {
-	const mots = await listAllMotsValides();
-	return mots.map((m) => ({ slug: m.slug }));
+	try {
+		const mots = await listAllMotsValides();
+		return mots.map((m) => ({ slug: m.slug }));
+	} catch {
+		return [];
+	}
 }
 
 /* ─── Metadata ────────────────────────────────────────── */
