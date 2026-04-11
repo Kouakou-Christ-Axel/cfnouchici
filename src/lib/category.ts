@@ -1,9 +1,9 @@
 export const CATEGORY_COLORS: Record<string, string> = {
-	VERBE:      "bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300",
-	NOM:        "bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-300",
-	ADJECTIF:   "bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300",
-	EXPRESSION: "bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300",
-	ADVERBE:    "bg-rose-50 text-rose-700 dark:bg-rose-950 dark:text-rose-300",
+	VERBE:      "bg-red-100 text-red-600",
+	NOM:        "bg-blue-100 text-blue-600",
+	ADJECTIF:   "bg-purple-100 text-purple-600",
+	EXPRESSION: "bg-emerald-100 text-emerald-600",
+	ADVERBE:    "bg-amber-100 text-amber-600",
 };
 
 export const CATEGORY_LABELS: Record<string, string> = {
