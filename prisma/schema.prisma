@@ -6,11 +6,31 @@
 generator client {
   provider        = "prisma-client-js"
   output          = "../src/generated/prisma"
-  previewFeatures = ["driverAdapters", "fullTextSearchPostgres"]
+  previewFeatures = ["fullTextSearchPostgres"]
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+enum Categorie {
+  NOM
+  VERBE
+  ADJECTIF
+  EXPRESSION
+  ADVERBE
+}
+
+enum Statut {
+  EN_ATTENTE
+  VALIDE
+  REJETE
+}
+
+enum Role {
+  USER
+  MODERATEUR
+  ADMIN
 }
 
 model User {
@@ -23,6 +43,9 @@ model User {
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
   accounts      Account[]
+  role          Role      @default(USER)
+  motsSoumis    Mot[]     @relation("SoumisPar")
+  motsValides   Mot[]     @relation("ValidePar")
 
   @@unique([email])
   @@map("user")
@@ -74,4 +97,35 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+model Mot {
+  id            String     @id @default(cuid())
+  slug          String     @unique
+  mot           String
+  definition    String
+  categorie     Categorie?
+  statut        Statut     @default(EN_ATTENTE)
+  motifRejet    String?
+
+  soumisParId   String?
+  soumisPar     User?      @relation("SoumisPar", fields: [soumisParId], references: [id])
+  valideParId   String?
+  validePar     User?      @relation("ValidePar", fields: [valideParId], references: [id])
+
+  exemples      Exemple[]
+
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  @@map("mot")
+}
+
+model Exemple {
+  id        String @id @default(cuid())
+  phrase    String
+  motId     String
+  mot       Mot    @relation(fields: [motId], references: [id], onDelete: Cascade)
+
+  @@map("exemple")
 }
