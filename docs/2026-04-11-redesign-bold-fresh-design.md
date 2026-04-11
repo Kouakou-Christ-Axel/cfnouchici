@@ -2,6 +2,13 @@
 
 Refonte complète du design de Nouchici. Direction : moderne, jeune, clean. Fond blanc, noir intense, badges colorés doux, pill buttons, gradient rouge→orange. Typo Space Grotesk pour les titres. Procédé page par page, section par section.
 
+## Contraintes
+
+- **SEO essentiel** : balises meta (title, description, og:image, twitter:card), structured data JSON-LD (WebSite, DefinedTerm), semantic HTML (h1/h2/nav/main/section/article), server components pour le contenu indexable
+- **shadcn et son écosystème** : utiliser les composants shadcn existants (Button, Card, Badge, Input, Separator, etc.) — ne pas créer de composants custom quand un shadcn existe
+- **Max 250 lignes par fichier** : découper en sous-composants si un fichier dépasse
+- **Un seul composant exporté par fichier** : chaque fichier = un composant = une responsabilité
+
 ## Design System
 
 ### Palette
@@ -94,13 +101,38 @@ Dark mode à définir dans une phase ultérieure.
 - `TrustSection` — supprimé (pas de valeur ajoutée)
 - `PopularWordBadge` — remplacé par les tags pills
 
+### SEO Homepage
+
+- `title` : "Nouchici — Le dictionnaire du nouchi ivoirien"
+- `description` : "Découvre et contribue au dictionnaire collaboratif du nouchi, l'argot urbain de Côte d'Ivoire. +400 mots documentés par la communauté."
+- JSON-LD `WebSite` avec `potentialAction: SearchAction` pour le sitelinks search box Google
+- Open Graph image à créer
+
 ### Fichiers impactés
 
+**Modifiés :**
 - `src/app/globals.css` — nouvelle palette CSS variables
-- `src/app/layout.tsx` — charger Space Grotesk depuis next/font/google
-- `src/components/public/accueil/hero-section.tsx` — réécriture complète
-- `src/components/public/accueil/popular-words-section.tsx` — refonte cards
-- `src/components/public/accueil/recent-words-section.tsx` — refonte liste
-- `src/components/layouts/general/navbar.tsx` — refonte style
+- `src/app/layout.tsx` — charger Space Grotesk depuis next/font/google, metadata globale
+- `src/app/page.tsx` — metadata SEO, JSON-LD
 - `src/lib/category.ts` — nouvelles couleurs catégorie (pastel)
-- Suppression : `src/components/ui/highlighter.tsx`, `src/components/ui/light-rays.tsx`, `src/components/animate-ui/` (gravity stars, shimmering)
+
+**Réécrits (découpés en sous-composants) :**
+- `src/components/layouts/general/navbar.tsx` — refonte complète
+  - `src/components/layouts/general/nav-links.tsx` — liens de navigation
+  - `src/components/layouts/general/nav-auth.tsx` — section auth (login/avatar)
+- `src/components/public/accueil/hero-section.tsx` — orchestrateur hero
+  - `src/components/public/accueil/hero-title.tsx` — titre + sous-titre
+  - `src/components/public/accueil/hero-search.tsx` — barre de recherche
+  - `src/components/public/accueil/hero-tags.tsx` — tags populaires
+  - `src/components/public/accueil/hero-stats.tsx` — stats bar
+- `src/components/public/accueil/popular-words-section.tsx` — section mots du moment
+  - `src/components/public/accueil/word-card.tsx` — card mot réutilisable
+- `src/components/public/accueil/recent-words-section.tsx` — section derniers ajouts
+  - `src/components/public/accueil/recent-word-row.tsx` — ligne mot récent
+
+**Supprimés :**
+- `src/components/ui/highlighter.tsx`
+- `src/components/ui/light-rays.tsx`
+- `src/components/animate-ui/` (tout le dossier)
+- `src/components/public/accueil/popular-word-badge.tsx`
+- `src/components/public/accueil/trust-section.tsx` (si existe)
