@@ -48,7 +48,20 @@
       "Bash(echo \"Exit: $?\")",
       "Bash(ls C:/Users/kouax/WebstormProjects/cfnouchici/*.config*)",
       "Bash(ls C:/Users/kouax/WebstormProjects/cfnouchici/next.config*)",
-      "Bash(ls C:/Users/kouax/WebstormProjects/cfnouchici/src/middleware*)"
+      "Bash(ls C:/Users/kouax/WebstormProjects/cfnouchici/src/middleware*)",
+      "Bash(ls:*)",
+      "Bash(mkdir -p /c/Users/kouax/WebstormProjects/cfnouchici/src/app/admin/mots/[slug])",
+      "Bash(mkdir -p /c/Users/kouax/WebstormProjects/cfnouchici/src/components/admin)",
+      "Bash(rtk next:*)",
+      "Bash(bash:*)",
+      "Bash(npm run:*)",
+      "Bash(rm -f /c/Users/kouax/WebstormProjects/cfnouchici/src/components/ui/highlighter.tsx)",
+      "Bash(rm -f /c/Users/kouax/WebstormProjects/cfnouchici/src/components/ui/light-rays.tsx)",
+      "Bash(rm -rf /c/Users/kouax/WebstormProjects/cfnouchici/src/components/animate-ui/)",
+      "Bash(rm -f /c/Users/kouax/WebstormProjects/cfnouchici/src/components/public/accueil/popular-word-badge.tsx)",
+      "Bash(rm -f /c/Users/kouax/WebstormProjects/cfnouchici/src/components/public/accueil/trust-section.tsx)",
+      "Bash(taskkill /F /IM node.exe)",
+      "Bash(rm -f \"/c/Users/kouax/WebstormProjects/cfnouchici/.next/lock\")"
     ]
   }
 }
