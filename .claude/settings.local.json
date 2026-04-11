@@ -39,7 +39,16 @@
       "Bash(mkdir -p /c/Users/kouax/WebstormProjects/cfnouchici/src/lib/mutations)",
       "Bash(pnpm db:seed)",
       "Bash(tsx --env-file=.env prisma/seed.ts)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(mkdir -p /c/Users/kouax/WebstormProjects/cfnouchici/src/app/api/admin/mots/\\\\[slug\\\\]/valider)",
+      "Bash(mkdir -p /c/Users/kouax/WebstormProjects/cfnouchici/src/app/api/admin/mots/\\\\[slug\\\\]/rejeter)",
+      "Bash(mkdir -p /c/Users/kouax/WebstormProjects/cfnouchici/src/app/api/admin/stats)",
+      "Bash(ls -la /c/Users/kouax/WebstormProjects/cfnouchici/src/app/api/mots/[slug]/)",
+      "Bash(pnpm dlx:*)",
+      "Bash(echo \"Exit: $?\")",
+      "Bash(ls C:/Users/kouax/WebstormProjects/cfnouchici/*.config*)",
+      "Bash(ls C:/Users/kouax/WebstormProjects/cfnouchici/next.config*)",
+      "Bash(ls C:/Users/kouax/WebstormProjects/cfnouchici/src/middleware*)"
     ]
   }
 }

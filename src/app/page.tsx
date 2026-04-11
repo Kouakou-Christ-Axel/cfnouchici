@@ -9,7 +9,7 @@ import RecentWordsSection from "@/components/public/accueil/recent-words-section
 export default function Home() {
 	return (
 		<>
-			<HeroSe====ction/>
+			<HeroSection/>
 			<TrustSection/>
 			<Separator className="my-10 md:my-12" />
 			<PopularWordsSection/>

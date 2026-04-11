@@ -27,7 +27,9 @@ export function checkRouteAccess(pathname: string, user: UserInfo): AccessResult
   return { allowed: true };
 }
 
-// Next.js 16 proxy function — required export
-export async function proxy(_request: NextRequest) {
+// Next.js 16 proxy function
+export function proxy(request: NextRequest) {
+  // For now, route protection is handled at the page level via getSessionOrRedirect
+  // This proxy satisfies Next.js 16's requirement for the file export
   return NextResponse.next();
 }
