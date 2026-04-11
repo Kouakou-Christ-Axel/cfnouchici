@@ -11,13 +11,24 @@ import {
 } from "@heroui/react";
 import {navLinks} from "@/config/navigation";
 import {Button} from "@/components/ui/button";
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import ThemeSwitcher from "@/components/layouts/theme-switcher";
-import {usePathname} from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
+import {authClient} from "@/lib/auth-client";
+import {LogOut, Shield} from "lucide-react";
 
 function Navbar() {
 	const pathname = usePathname();
+	const router = useRouter();
+	const { data: session } = authClient.useSession();
+	const user = session?.user;
 
 	const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+
+	const handleSignOut = async () => {
+		await authClient.signOut();
+		router.push("/");
+	};
 
 	const isActive = (href: string) => {
 		return href === '/'
@@ -66,10 +77,44 @@ function Navbar() {
 			</NavbarMenu>
 			<NavbarContent justify="end">
 				<ThemeSwitcher/>
-				{/*<Link href="/">Se connecter</Link>*/}
-				<Button>
-					Proposer un mot
-				</Button>
+				{user ? (
+					<>
+						{(user.role === "MODERATEUR" || user.role === "ADMIN") && (
+							<NavbarItem>
+								<Link href="/admin" aria-label="Administration">
+									<Shield className="size-4" />
+								</Link>
+							</NavbarItem>
+						)}
+						<NavbarItem>
+							<Avatar className="size-8 cursor-pointer">
+								<AvatarImage src={user.image ?? undefined} alt={user.name ?? "Utilisateur"} />
+								<AvatarFallback>{user.name?.charAt(0).toUpperCase() ?? "U"}</AvatarFallback>
+							</Avatar>
+						</NavbarItem>
+						<NavbarItem>
+							<Button variant="ghost" size="icon" onClick={handleSignOut} aria-label="Se déconnecter">
+								<LogOut className="size-4" />
+							</Button>
+						</NavbarItem>
+						<NavbarItem>
+							<Button asChild>
+								<Link href="/proposer">Proposer un mot</Link>
+							</Button>
+						</NavbarItem>
+					</>
+				) : (
+					<>
+						<NavbarItem>
+							<Link href="/connexion" color="foreground">Se connecter</Link>
+						</NavbarItem>
+						<NavbarItem>
+							<Button asChild>
+								<Link href="/connexion">Proposer un mot</Link>
+							</Button>
+						</NavbarItem>
+					</>
+				)}
 			</NavbarContent>
 		</UINavbar>
 	);
