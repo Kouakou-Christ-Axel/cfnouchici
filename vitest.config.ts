@@ -6,6 +6,9 @@ export default defineConfig({
     environment: "node",
     globals: true,
     setupFiles: ["./src/tests/setup.ts"],
+    env: {
+      DATABASE_URL: "postgresql://nouchici:nouchici@localhost:5433/nouchici",
+    },
   },
   resolve: {
     alias: {

@@ -1,10 +1,19 @@
-import {cache} from "react";
-import {PrismaPg} from "@prisma/adapter-pg";
-import {PrismaClient} from "@/generated/prisma";
+import { PrismaClient } from "@/generated/prisma";
+import { PrismaPg } from "@prisma/adapter-pg";
 
-export const getDb = cache(() => {
-	const connectionString = process.env.PG_URL ?? "";
-	const adapter = new PrismaPg({ connectionString, maxUses: 1 });
-	return new PrismaClient({adapter});
-});
+function createPrismaClient() {
+	const connectionString = process.env.DATABASE_URL;
+	if (!connectionString) {
+		throw new Error("DATABASE_URL environment variable is not set");
+	}
+	const adapter = new PrismaPg({ connectionString });
+	return new PrismaClient({ adapter });
+}
 
+const globalForPrisma = globalThis as unknown as {
+	prisma: PrismaClient | undefined;
+};
+
+export const db = globalForPrisma.prisma ?? createPrismaClient();
+
+if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = db;
