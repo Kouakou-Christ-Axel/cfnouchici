@@ -2,22 +2,24 @@ import React from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { words } from "@/config/words";
+import { getMotBySlug, listAllMotsValides } from "@/lib/queries/mots";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, Quote, User, CalendarDays } from "lucide-react";
-import { categoryColor } from "@/lib/category";
+import { categoryColor, categoryLabel } from "@/lib/category";
 import { WordInteractions } from "@/components/public/mots/word-interactions";
 import { ScrollToTop } from "@/components/ui/scroll-to-top";
-import { format, parseISO } from "date-fns";
+import { format } from "date-fns";
 import { fr } from "date-fns/locale";
+import { db } from "@/lib/db";
 
 /* ─── ISR ─────────────────────────────────────────────── */
 export const revalidate = 3600;
 
-export function generateStaticParams() {
-	return words.map((w) => ({ slug: w.slug }));
+export async function generateStaticParams() {
+	const mots = await listAllMotsValides();
+	return mots.map((m) => ({ slug: m.slug }));
 }
 
 /* ─── Metadata ────────────────────────────────────────── */
@@ -27,11 +29,11 @@ export async function generateMetadata({
 	params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
 	const { slug } = await params;
-	const word = words.find((w) => w.slug === slug);
-	if (!word) return {};
+	const mot = await getMotBySlug(slug);
+	if (!mot) return {};
 	return {
-		title: `${word.label} — Nouchici`,
-		description: word.definition,
+		title: `${mot.mot} — Nouchici`,
+		description: mot.definition,
 	};
 }
 
@@ -42,14 +44,20 @@ export default async function MotDetailPage({
 	params: Promise<{ slug: string }>;
 }) {
 	const { slug } = await params;
-	const word = words.find((w) => w.slug === slug);
-	if (!word) notFound();
+	const mot = await getMotBySlug(slug);
+	if (!mot || mot.statut !== "VALIDE") notFound();
 
-	const letter = word.label[0].toUpperCase();
-	const related = words
-		.filter((w) => w.slug !== slug && w.category === word.category)
-		.slice(0, 3);
-	const formattedDate = format(parseISO(word.addedAt), "d MMMM yyyy", { locale: fr });
+	const letter = mot.mot[0].toUpperCase();
+	const related = await db.mot.findMany({
+		where: {
+			statut: "VALIDE",
+			categorie: mot.categorie ?? undefined,
+			slug: { not: slug },
+		},
+		take: 3,
+	});
+
+	const formattedDate = format(mot.createdAt, "d MMMM yyyy", { locale: fr });
 
 	return (
 		<div className="content-container py-12 space-y-10">
@@ -80,11 +88,11 @@ export default async function MotDetailPage({
 
 					{/* Mot + catégorie */}
 					<header className="space-y-4">
-						<span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${categoryColor(word.category)}`}>
-							{word.category}
+						<span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${categoryColor(mot.categorie)}`}>
+							{categoryLabel(mot.categorie)}
 						</span>
 						<h1 className="text-5xl sm:text-6xl font-semibold tracking-tight uppercase leading-none">
-							{word.label}
+							{mot.mot}
 						</h1>
 					</header>
 
@@ -95,24 +103,26 @@ export default async function MotDetailPage({
 						<span className="text-xs font-medium text-muted-foreground uppercase tracking-widest">
 							Définition
 						</span>
-						<p className="text-lg leading-relaxed">{word.definition}</p>
+						<p className="text-lg leading-relaxed">{mot.definition}</p>
 					</div>
 
 					{/* Exemple */}
-					<div className="space-y-2">
-						<span className="text-xs font-medium text-muted-foreground uppercase tracking-widest">
-							Exemple
-						</span>
-						<blockquote className="flex items-start gap-3 border-l-2 border-foreground/20 pl-4">
-							<Quote className="size-4 text-muted-foreground/40 shrink-0 mt-1" />
-							<p className="italic text-muted-foreground">{word.example}</p>
-						</blockquote>
-					</div>
+					{mot.exemples.length > 0 && (
+						<div className="space-y-2">
+							<span className="text-xs font-medium text-muted-foreground uppercase tracking-widest">
+								Exemple
+							</span>
+							<blockquote className="flex items-start gap-3 border-l-2 border-foreground/20 pl-4">
+								<Quote className="size-4 text-muted-foreground/40 shrink-0 mt-1" />
+								<p className="italic text-muted-foreground">{mot.exemples[0].phrase}</p>
+							</blockquote>
+						</div>
+					)}
 
 					<Separator />
 
 					{/* Interactions : vote + commentaires */}
-					<WordInteractions initialLikes={word.likes} />
+					<WordInteractions initialLikes={0} />
 				</div>
 
 				{/* Sidebar */}
@@ -131,7 +141,7 @@ export default async function MotDetailPage({
 								<User className="size-4 text-muted-foreground shrink-0" />
 								<div>
 									<p className="text-xs text-muted-foreground">Ajouté par</p>
-									<p className="text-sm font-medium">{word.author}</p>
+									<p className="text-sm font-medium">{mot.soumisPar?.name ?? "—"}</p>
 								</div>
 							</div>
 							<div className="flex items-center gap-3">
@@ -143,7 +153,7 @@ export default async function MotDetailPage({
 							</div>
 							<div className="flex items-center gap-3">
 								<Badge variant="secondary" className="text-xs">
-									{word.category}
+									{categoryLabel(mot.categorie)}
 								</Badge>
 							</div>
 						</CardContent>
@@ -164,7 +174,7 @@ export default async function MotDetailPage({
 									>
 										<div className="min-w-0">
 											<p className="text-sm font-semibold uppercase truncate group-hover:underline underline-offset-4">
-												{w.label}
+												{w.mot}
 											</p>
 											<p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">
 												{w.definition}
@@ -183,5 +193,3 @@ export default async function MotDetailPage({
 		</div>
 	);
 }
-
-

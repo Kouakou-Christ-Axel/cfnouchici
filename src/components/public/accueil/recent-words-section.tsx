@@ -1,14 +1,17 @@
-"use client";
-
 import React from 'react';
 import { ArrowRight, Clock, Plus } from 'lucide-react';
-import { recentWords } from '@/config/navigation';
+import { getRecentMots } from '@/lib/queries/mots';
+import { categoryLabel } from '@/lib/category';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
+import { formatDistanceToNow } from 'date-fns';
+import { fr } from 'date-fns/locale';
 
-function RecentWordsSection() {
+async function RecentWordsSection() {
+	const mots = await getRecentMots();
+
 	return (
 		<section className="py-16">
 			<div className="content-container">
@@ -35,11 +38,11 @@ function RecentWordsSection() {
 
 				{/* List */}
 				<div className="flex flex-col">
-					{recentWords.map((word, index) => (
-						<React.Fragment key={word.label}>
+					{mots.map((mot, index) => (
+						<React.Fragment key={mot.slug}>
 							{index > 0 && <Separator />}
 							<Link
-								href={word.href}
+								href={`/mots/${mot.slug}`}
 								className="group flex items-center justify-between gap-4 py-5 hover:bg-muted/40 -mx-4 px-4 rounded-lg transition-colors duration-150"
 							>
 								<div className="flex items-center gap-5 min-w-0">
@@ -52,17 +55,17 @@ function RecentWordsSection() {
 									<div className="flex flex-col gap-0.5 min-w-0">
 										<div className="flex items-center gap-2">
 											<span className="text-base font-semibold uppercase tracking-tight group-hover:underline underline-offset-4">
-												{word.label}
+												{mot.mot}
 											</span>
-											{word.category && (
+											{mot.categorie && (
 												<span className="hidden sm:inline text-xs text-muted-foreground bg-muted rounded-full px-2 py-0.5">
-													{word.category}
+													{categoryLabel(mot.categorie)}
 												</span>
 											)}
 										</div>
-										{word.definition && (
+										{mot.definition && (
 											<span className="text-sm text-muted-foreground truncate">
-												{word.definition}
+												{mot.definition}
 											</span>
 										)}
 									</div>
@@ -71,8 +74,10 @@ function RecentWordsSection() {
 								{/* Meta + arrow */}
 								<div className="flex items-center gap-4 shrink-0">
 									<div className="hidden md:flex flex-col items-end gap-0.5">
-										<span className="text-xs text-muted-foreground">{word.addedAt}</span>
-										<span className="text-xs text-muted-foreground">par {word.author}</span>
+										<span className="text-xs text-muted-foreground">
+											{formatDistanceToNow(mot.createdAt, { addSuffix: true, locale: fr })}
+										</span>
+										<span className="text-xs text-muted-foreground">par {mot.soumisPar?.name ?? "—"}</span>
 									</div>
 									<ArrowRight className="size-4 text-muted-foreground opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200" />
 								</div>
@@ -84,7 +89,7 @@ function RecentWordsSection() {
 				{/* CTA */}
 				<div className="flex justify-center mt-10">
 					<Button asChild variant="outline" size="lg" className="gap-2">
-						<Link href="/dictionnaire?tri=recent">
+						<Link href="/mots?tri=recent">
 							Voir tous les ajouts
 							<ArrowRight className="size-4" />
 						</Link>
@@ -96,4 +101,3 @@ function RecentWordsSection() {
 }
 
 export default RecentWordsSection;
-

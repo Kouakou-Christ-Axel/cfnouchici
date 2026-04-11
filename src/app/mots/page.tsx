@@ -1,7 +1,8 @@
 import React from 'react';
 import Link from "next/link";
 import type {Metadata} from "next";
-import {words} from "@/config/words";
+import {listAllMotsValides} from "@/lib/queries/mots";
+import {categoryLabel} from "@/lib/category";
 import {Badge} from "@/components/ui/badge";
 import {Separator} from "@/components/ui/separator";
 import {Button} from "@/components/ui/button";
@@ -10,23 +11,25 @@ import {BookOpen, Plus} from "lucide-react";
 import {WordGroup} from "@/components/public/mots/word-group";
 import {ScrollToTop} from "@/components/ui/scroll-to-top";
 
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
 	title: "Tous les mots — Nouchici",
 	description: "Explore le dictionnaire complet du nouchi ivoirien.",
 };
 
-export default function MotsListPage() {
-	const sorted = [...words].sort((a, b) => a.label.localeCompare(b.label, "fr"));
+export default async function MotsListPage() {
+	const mots = await listAllMotsValides();
 
-	const grouped = sorted.reduce<Record<string, typeof words>>((acc, word) => {
-		const letter = word.label[0].toUpperCase();
+	const grouped = mots.reduce<Record<string, typeof mots>>((acc, mot) => {
+		const letter = mot.mot[0].toUpperCase();
 		if (!acc[letter]) acc[letter] = [];
-		acc[letter].push(word);
+		acc[letter].push(mot);
 		return acc;
 	}, {});
 
 	const letters = Object.keys(grouped).sort();
-	const totalLikes = words.reduce((s, w) => s + w.likes, 0);
+	const contributeurs = new Set(mots.map(m => m.soumisParId).filter(Boolean)).size;
 
 	return (
 		<>
@@ -46,7 +49,7 @@ export default function MotsListPage() {
 								<span className="text-muted-foreground">du nouchi</span>
 							</h1>
 							<p className="text-base text-muted-foreground max-w-lg">
-								{words.length} mots documentés par la communauté ivoirienne.
+								{mots.length} mots documentés par la communauté ivoirienne.
 							</p>
 						</div>
 						<Button asChild className="gap-2 shrink-0">
@@ -60,9 +63,9 @@ export default function MotsListPage() {
 					{/* Stats bar */}
 					<div className="grid grid-cols-3 gap-4">
 						{[
-							{label: "Mots", value: words.length},
-							{label: "Catégories", value: new Set(words.map((w) => w.category)).size},
-							{label: "J'aime au total", value: totalLikes.toLocaleString("fr-FR")},
+							{label: "Mots", value: mots.length},
+							{label: "Catégories", value: new Set(mots.map((m) => m.categorie)).size},
+							{label: "Contributeurs", value: contributeurs},
 						].map(({label, value}) => (
 							<Card key={label} className="py-4">
 								<CardContent className="flex flex-col items-center text-center px-4 py-0 gap-0.5">
@@ -94,7 +97,7 @@ export default function MotsListPage() {
 				{/* ── Groupes avec pagination ────────────────────── */}
 				<div className="space-y-14">
 					{letters.map((letter) => (
-						<WordGroup key={letter} letter={letter} words={grouped[letter]}/>
+						<WordGroup key={letter} letter={letter} mots={grouped[letter]}/>
 					))}
 				</div>
 

@@ -6,8 +6,16 @@ import {cn} from "@/lib/utils";
 import {ShimmeringText} from "@/components/animate-ui/primitives/texts/shimmering";
 import {Badge} from "@/components/ui/badge";
 import {InputGroup, InputGroupAddon, InputGroupInput} from "@/components/ui/input-group";
-import {popularWords} from "@/config/navigation";
 import PopularWordBadge from "@/components/public/accueil/popular-word-badge";
+
+const popularWords = [
+	{ label: "goumin", href: "/mots/goumin" },
+	{ label: "choco", href: "/mots/choco" },
+	{ label: "babi", href: "/mots/babi" },
+	{ label: "gouro", href: "/mots/gouro" },
+	{ label: "garba", href: "/mots/garba" },
+	{ label: "maquis", href: "/mots/maquis" },
+];
 import {GravityStarsBackground} from "@/components/animate-ui/components/backgrounds/gravity-stars";
 import {Highlighter} from "@/components/ui/highlighter";
 import {LightRays} from "@/components/ui/light-rays";
