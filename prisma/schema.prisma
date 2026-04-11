@@ -33,6 +33,24 @@ enum Role {
   ADMIN
 }
 
+enum ActionModeration {
+  VALIDE
+  REJETE
+  EDITE
+}
+
+enum Connaissance {
+  OUI_UTILISE
+  CONNAIS
+  JAMAIS_ENTENDU
+}
+
+enum Exactitude {
+  EXACTE
+  APPROXIMATIVE
+  FAUSSE
+}
+
 model User {
   id            String    @id
   name          String
@@ -44,8 +62,10 @@ model User {
   sessions      Session[]
   accounts      Account[]
   role          Role      @default(USER)
-  motsSoumis    Mot[]     @relation("SoumisPar")
-  motsValides   Mot[]     @relation("ValidePar")
+  motsSoumis     Mot[]           @relation("SoumisPar")
+  motsValides    Mot[]           @relation("ValidePar")
+  logsModeration LogModeration[] @relation("LogsModeration")
+  votesMots      VoteMot[]       @relation("VotesMots")
 
   @@unique([email])
   @@map("user")
@@ -113,7 +133,9 @@ model Mot {
   valideParId   String?
   validePar     User?      @relation("ValidePar", fields: [valideParId], references: [id])
 
-  exemples      Exemple[]
+  exemples       Exemple[]
+  logsModeration LogModeration[]
+  votes          VoteMot[]
 
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
@@ -128,4 +150,31 @@ model Exemple {
   mot       Mot    @relation(fields: [motId], references: [id], onDelete: Cascade)
 
   @@map("exemple")
+}
+
+model LogModeration {
+  id           String          @id @default(cuid())
+  action       ActionModeration
+  motif        String?
+  motId        String
+  mot          Mot             @relation(fields: [motId], references: [id], onDelete: Cascade)
+  moderateurId String
+  moderateur   User            @relation("LogsModeration", fields: [moderateurId], references: [id])
+  createdAt    DateTime        @default(now())
+
+  @@map("log_moderation")
+}
+
+model VoteMot {
+  id           String       @id @default(cuid())
+  motId        String
+  mot          Mot          @relation(fields: [motId], references: [id], onDelete: Cascade)
+  userId       String
+  user         User         @relation("VotesMots", fields: [userId], references: [id])
+  connaissance Connaissance
+  exactitude   Exactitude
+  createdAt    DateTime     @default(now())
+
+  @@unique([motId, userId])
+  @@map("vote_mot")
 }
