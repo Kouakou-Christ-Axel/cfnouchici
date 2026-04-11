@@ -1,3 +1,6 @@
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
+
 // Pure function — testable
 type UserInfo = { id: string; role: string } | null;
 
@@ -24,25 +27,7 @@ export function checkRouteAccess(pathname: string, user: UserInfo): AccessResult
   return { allowed: true };
 }
 
-// Server-side helper — used in page server components
-// This function uses Next.js server imports, so it can't be unit tested directly
-export async function getSessionOrRedirect(pathname: string, requireRole?: "MODERATEUR" | "ADMIN") {
-  const { auth } = await import("@/lib/auth");
-  const { headers } = await import("next/headers");
-  const { redirect } = await import("next/navigation");
-
-  const session = await auth.api.getSession({ headers: await headers() });
-
-  if (!session) {
-    redirect(`/connexion?callbackUrl=${pathname}`);
-  }
-
-  if (requireRole) {
-    const role = (session.user as { role?: string }).role ?? "USER";
-    if (role !== "MODERATEUR" && role !== "ADMIN") {
-      redirect("/");
-    }
-  }
-
-  return session;
+// Next.js 16 proxy function — required export
+export async function proxy(_request: NextRequest) {
+  return NextResponse.next();
 }
