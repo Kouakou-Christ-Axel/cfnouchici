@@ -77,7 +77,7 @@ export async function listMotsValidesByLettre(lettre: string) {
 export async function getPopularMots(limit = 6) {
   return db.mot.findMany({
     where: { statut: "VALIDE" },
-    include: { exemples: true },
+    include: { exemples: true, soumisPar: { select: { id: true, name: true, image: true } } },
     orderBy: { createdAt: "asc" },
     take: limit,
   });
