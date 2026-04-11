@@ -1,10 +1,9 @@
-import { describe, it, expect, beforeAll } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { db } from "@/lib/db";
 import { listMotsValides, getMotBySlug } from "@/lib/queries/mots";
 
 describe("listMotsValides", () => {
-  beforeAll(async () => {
-    // Clean slate
+  beforeEach(async () => {
     await db.exemple.deleteMany();
     await db.mot.deleteMany();
 
@@ -47,9 +46,16 @@ describe("listMotsValides", () => {
 });
 
 describe("getMotBySlug", () => {
+  beforeEach(async () => {
+    await db.exemple.deleteMany();
+    await db.mot.deleteMany();
+  });
+
   it("returns a word with exemples", async () => {
-    const mot = await db.mot.findUnique({ where: { slug: "goumin" } });
-    await db.exemple.create({ data: { phrase: "On va goumin!", motId: mot!.id } });
+    const mot = await db.mot.create({
+      data: { slug: "goumin", mot: "Goumin", definition: "Se battre", statut: "VALIDE", categorie: "VERBE" },
+    });
+    await db.exemple.create({ data: { phrase: "On va goumin!", motId: mot.id } });
 
     const result = await getMotBySlug("goumin");
     expect(result).not.toBeNull();

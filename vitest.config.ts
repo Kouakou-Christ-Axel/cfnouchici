@@ -5,6 +5,7 @@ export default defineConfig({
   test: {
     environment: "node",
     globals: true,
+    fileParallelism: false,
     setupFiles: ["./src/tests/setup.ts"],
     env: {
       DATABASE_URL: "postgresql://nouchici:nouchici@localhost:5433/nouchici",
