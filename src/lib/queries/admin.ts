@@ -1,5 +1,8 @@
 import { db } from "@/lib/db";
+import { applyTemporalBoost } from "@/lib/score/popularity";
 import type { Statut, Categorie } from "@/generated/prisma";
+
+export type MotsSortOption = "popularity" | "recent" | "oldest" | "alphabetical";
 
 interface ListAllMotsParams {
   cursor?: string;
@@ -7,6 +10,7 @@ interface ListAllMotsParams {
   statut?: Statut;
   categorie?: Categorie;
   search?: string;
+  sort?: MotsSortOption;
 }
 
 export async function listAllMots({
@@ -15,6 +19,7 @@ export async function listAllMots({
   statut,
   categorie,
   search,
+  sort = "recent",
 }: ListAllMotsParams = {}) {
   const where: Record<string, unknown> = {};
 
@@ -27,6 +32,13 @@ export async function listAllMots({
     ];
   }
 
+  const orderByMap = {
+    popularity: { popularityScore: "desc" as const },
+    recent: { createdAt: "desc" as const },
+    oldest: { createdAt: "asc" as const },
+    alphabetical: { mot: "asc" as const },
+  };
+
   const mots = await db.mot.findMany({
     where,
     include: {
@@ -34,13 +46,21 @@ export async function listAllMots({
       soumisPar: { select: { id: true, name: true, image: true } },
       _count: { select: { votes: true } },
     },
-    orderBy: { createdAt: "desc" },
+    orderBy: orderByMap[sort],
     take: limit + 1,
     ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
   });
 
   const hasMore = mots.length > limit;
-  const data = hasMore ? mots.slice(0, limit) : mots;
+  let data = hasMore ? mots.slice(0, limit) : mots;
+
+  if (sort === "popularity") {
+    const now = new Date();
+    data = data
+      .map((m) => ({ ...m, effectiveScore: applyTemporalBoost(m.popularityScore, m.createdAt, now) }))
+      .sort((a, b) => b.effectiveScore - a.effectiveScore);
+  }
+
   const nextCursor = hasMore ? data[data.length - 1].id : null;
 
   return { data, nextCursor };

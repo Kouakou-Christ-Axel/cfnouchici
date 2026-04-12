@@ -13,7 +13,8 @@ export async function GET(request: NextRequest) {
   const statut = (searchParams.get("statut") as Statut) ?? undefined;
   const categorie = (searchParams.get("categorie") as Categorie) ?? undefined;
   const search = searchParams.get("search") ?? undefined;
+  const sort = (searchParams.get("sort") as "popularity" | "recent" | "oldest" | "alphabetical" | null) ?? undefined;
 
-  const result = await listAllMots({ cursor, limit, statut, categorie, search });
+  const result = await listAllMots({ cursor, limit, statut, categorie, search, sort });
   return NextResponse.json(result);
 }

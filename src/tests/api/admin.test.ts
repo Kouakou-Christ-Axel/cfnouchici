@@ -52,6 +52,19 @@ describe("admin queries and mutations", () => {
       expect(result.data[0].slug).toBe("a");
     });
 
+    it("sorts by popularity when sort=popularity", async () => {
+      await db.mot.createMany({
+        data: [
+          { slug: "low", mot: "Low", definition: "d", statut: "EN_ATTENTE", popularityScore: 1 },
+          { slug: "high", mot: "High", definition: "d", statut: "EN_ATTENTE", popularityScore: 100 },
+          { slug: "mid", mot: "Mid", definition: "d", statut: "EN_ATTENTE", popularityScore: 50 },
+        ],
+      });
+      const result = await listAllMots({ statut: "EN_ATTENTE", sort: "popularity" });
+      expect(result.data[0].slug).toBe("high");
+      expect(result.data[2].slug).toBe("low");
+    });
+
     it("supports pagination", async () => {
       await db.mot.createMany({
         data: [
