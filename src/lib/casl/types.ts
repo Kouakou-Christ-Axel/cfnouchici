@@ -1,5 +1,5 @@
 export type Actions = "read" | "create" | "update" | "delete" | "moderate" | "manage";
-export type Subjects = "Mot" | "all";
+export type Subjects = "Mot" | "User" | "LogModeration" | "all";
 
 export type UserForAbilities = {
   id: string;

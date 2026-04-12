@@ -62,6 +62,30 @@ describe("CASL abilities", () => {
     });
   });
 
+  describe("ADMIN manages User and LogModeration", () => {
+    const abilities = defineAbilitiesFor(makeUser("ADMIN"));
+
+    it("can manage User", () => {
+      expect(abilities.can("manage" as never, "User")).toBe(true);
+    });
+
+    it("can read LogModeration", () => {
+      expect(abilities.can("read", "LogModeration")).toBe(true);
+    });
+  });
+
+  describe("MODERATEUR cannot manage User", () => {
+    const abilities = defineAbilitiesFor(makeUser("MODERATEUR"));
+
+    it("cannot manage User", () => {
+      expect(abilities.can("manage" as never, "User")).toBe(false);
+    });
+
+    it("cannot read LogModeration", () => {
+      expect(abilities.can("read", "LogModeration")).toBe(false);
+    });
+  });
+
   describe("unauthenticated (null user)", () => {
     const abilities = defineAbilitiesFor(null);
 
