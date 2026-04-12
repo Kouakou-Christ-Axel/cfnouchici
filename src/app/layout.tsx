@@ -1,9 +1,7 @@
 import type {Metadata} from "next";
 import {Inter, Space_Grotesk} from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/layouts/general/navbar";
 import {Providers} from "@/components/Providers";
-import Footer from "@/components/layouts/general/footer";
 
 const inter = Inter({
 	variable: "--font-sans",
@@ -44,11 +42,7 @@ export default function RootLayout({children}: Readonly<{
 			className={`${inter.variable} ${spaceGrotesk.variable} font-sans antialiased flex flex-col min-h-screen`}
 		>
 		<Providers>
-			<Navbar/>
-			<main className="flex-1">
-				{children}
-			</main>
-			<Footer/>
+			{children}
 		</Providers>
 		</body>
 		</html>
