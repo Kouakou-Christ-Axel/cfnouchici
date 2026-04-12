@@ -5,7 +5,6 @@
 @plugin "../config/hero.ts";
 @source '../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
 
-
 @custom-variant dark (&:is(.dark *));
 
 :root {
@@ -25,8 +24,8 @@
   --accent-foreground: oklch(0.1500 0 0);
   --destructive: oklch(0.6368 0.2078 25.3313);
   --destructive-foreground: oklch(1.0000 0 0);
-  --border: oklch(0.9550 0 0);
-  --input: oklch(0.9850 0 0);
+  --border: oklch(0.9200 0 0);
+  --input: oklch(1.0000 0 0);
   --ring: oklch(0.1500 0 0);
   --chart-1: oklch(0.6693 0.0706 248.9230);
   --chart-2: oklch(0.6678 0.1546 41.6200);
@@ -80,8 +79,8 @@
   --accent-foreground: oklch(0.9850 0 0);
   --destructive: oklch(0.6368 0.2078 25.3313);
   --destructive-foreground: oklch(1.0000 0 0);
-  --border: oklch(0.2000 0 0);
-  --input: oklch(0.1500 0 0);
+  --border: oklch(0.2500 0 0);
+  --input: oklch(0.2000 0 0);
   --ring: oklch(0.9850 0 0);
   --chart-1: oklch(0.7124 0.0606 248.6896);
   --chart-2: oklch(0.6678 0.1546 41.6200);
