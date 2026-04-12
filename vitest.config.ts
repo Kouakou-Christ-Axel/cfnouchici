@@ -8,7 +8,7 @@ export default defineConfig({
     fileParallelism: false,
     setupFiles: ["./src/tests/setup.ts"],
     env: {
-      DATABASE_URL: "postgresql://nouchici:nouchici@localhost:5433/nouchici",
+      DATABASE_URL: "postgresql://nouchici:nouchici@localhost:5432/nouchici",
     },
   },
   resolve: {
