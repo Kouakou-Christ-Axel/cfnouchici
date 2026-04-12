@@ -55,3 +55,6 @@ next-env.d.ts
 !.dev.vars.example
 
 /src/generated/prisma
+
+# superpowers brainstorm artifacts
+.superpowers/
