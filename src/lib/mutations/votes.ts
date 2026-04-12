@@ -1,8 +1,9 @@
 import { db } from "@/lib/db";
+import { recomputeMotScore } from "@/lib/score/recompute-mot-score";
 import type { VoteMotInput } from "@/lib/validators/vote";
 
 export async function upsertVote(motId: string, userId: string, input: VoteMotInput) {
-  return db.voteMot.upsert({
+  const vote = await db.voteMot.upsert({
     where: { motId_userId: { motId, userId } },
     create: {
       motId,
@@ -15,4 +16,8 @@ export async function upsertVote(motId: string, userId: string, input: VoteMotIn
       exactitude: input.exactitude,
     },
   });
+
+  await recomputeMotScore(motId);
+
+  return vote;
 }

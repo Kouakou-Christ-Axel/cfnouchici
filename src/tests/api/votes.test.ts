@@ -50,6 +50,12 @@ describe("votes", () => {
       const count = await db.voteMot.count({ where: { motId, userId: userId1 } });
       expect(count).toBe(1);
     });
+
+    it("recomputes the popularity score after voting", async () => {
+      await upsertVote(motId, userId1, { connaissance: "OUI_UTILISE", exactitude: "EXACTE" });
+      const motAfter = await db.mot.findUnique({ where: { id: motId } });
+      expect(motAfter!.popularityScore).toBeGreaterThan(0);
+    });
   });
 
   describe("getVoteSummary", () => {
