@@ -62,6 +62,8 @@ model User {
   sessions      Session[]
   accounts      Account[]
   role          Role      @default(USER)
+  banned        Boolean   @default(false)
+  bannedAt      DateTime?
   motsSoumis     Mot[]           @relation("SoumisPar")
   motsValides    Mot[]           @relation("ValidePar")
   logsModeration LogModeration[] @relation("LogsModeration")
@@ -140,6 +142,11 @@ model Mot {
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
 
+  popularityScore Float   @default(0)
+  socialScore     Int     @default(0)
+  socialNotes     String?
+
+  @@index([statut, popularityScore])
   @@map("mot")
 }
 
