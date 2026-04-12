@@ -15,3 +15,17 @@ export async function getAdminSession() {
 
   return { error: null, session };
 }
+
+export async function getAdminOnlySession() {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) {
+    return { error: NextResponse.json({ error: "Non authentifié" }, { status: 401 }), session: null };
+  }
+
+  const role = (session.user as { role?: string }).role ?? "USER";
+  if (role !== "ADMIN") {
+    return { error: NextResponse.json({ error: "Réservé aux administrateurs" }, { status: 403 }), session: null };
+  }
+
+  return { error: null, session };
+}
