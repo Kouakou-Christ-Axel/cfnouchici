@@ -7,6 +7,7 @@ import { createMotSchema } from "@/lib/validators/mot";
 import { z } from "zod";
 import Link from "next/link";
 import { Plus, Trash2, CheckCircle, Loader2 } from "lucide-react";
+import { ShareButton } from "@/components/share/share-button";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -45,6 +46,8 @@ const CATEGORIES = [
 export function ProposerForm() {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const [submittedSlug, setSubmittedSlug] = useState<string | null>(null);
+  const [submittedMot, setSubmittedMot] = useState<string | null>(null);
 
   const form = useForm<FormValues>({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -78,6 +81,9 @@ export function ProposerForm() {
         setErrorMessage("Une erreur est survenue. Réessaie plus tard.");
         return;
       }
+      const created = await res.json();
+      setSubmittedSlug(created.slug);
+      setSubmittedMot(created.mot);
       setStatus("success");
     } catch {
       setStatus("error");
@@ -92,14 +98,24 @@ export function ProposerForm() {
           <CheckCircle className="size-12 text-emerald-500 mx-auto" />
           <h2 className="text-xl font-semibold">Mot soumis avec succès !</h2>
           <p className="text-muted-foreground">
-            Ton mot sera examiné par un modérateur avant d&apos;être publié.
+            Ton mot sera examiné par un modérateur avant d&apos;être publié. En attendant, partage-le pour que la communauté puisse voter !
           </p>
+          {submittedSlug && submittedMot && (
+            <div className="flex justify-center pt-2">
+              <ShareButton mot={submittedMot} slug={submittedSlug} variant="default" />
+            </div>
+          )}
           <div className="flex justify-center gap-3">
             <Button variant="outline" asChild className="rounded-full">
               <Link href="/mots">Voir le dictionnaire</Link>
             </Button>
             <Button
-              onClick={() => { form.reset(); setStatus("idle"); }}
+              onClick={() => {
+                form.reset();
+                setStatus("idle");
+                setSubmittedSlug(null);
+                setSubmittedMot(null);
+              }}
               className="rounded-full"
             >
               Proposer un autre mot

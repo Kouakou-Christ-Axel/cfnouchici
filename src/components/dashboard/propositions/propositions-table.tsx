@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
+import { ShareButton } from "@/components/share/share-button";
 import {
   Table,
   TableBody,
@@ -71,14 +72,17 @@ export function PropositionsTable({ propositions }: PropositionsTableProps) {
                 {new Date(prop.createdAt).toLocaleDateString("fr-FR")}
               </TableCell>
               <TableCell className="text-right">
-                {prop.statut === "VALIDE" && (
-                  <Button variant="ghost" size="icon" asChild>
-                    <Link href={`/mots/${prop.slug}`} aria-label="Voir"><ExternalLink className="size-4" /></Link>
-                  </Button>
-                )}
-                {prop.statut === "EN_ATTENTE" && (
-                  <DeletePropositionDialog slug={prop.slug} mot={prop.mot} />
-                )}
+                <div className="inline-flex gap-1">
+                  <ShareButton mot={prop.mot} slug={prop.slug} size="icon" variant="ghost" />
+                  {prop.statut === "VALIDE" && (
+                    <Button variant="ghost" size="icon" asChild>
+                      <Link href={`/mots/${prop.slug}`} aria-label="Voir"><ExternalLink className="size-4" /></Link>
+                    </Button>
+                  )}
+                  {prop.statut === "EN_ATTENTE" && (
+                    <DeletePropositionDialog slug={prop.slug} mot={prop.mot} />
+                  )}
+                </div>
               </TableCell>
             </TableRow>
           ))}
