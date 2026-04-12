@@ -124,7 +124,7 @@ export function MotsTable() {
             return (
               <Link
                 key={mot.id}
-                href={`/admin/mots/${mot.slug}`}
+                href={`/dashboard/moderation/${mot.slug}`}
                 className="flex items-center justify-between px-4 py-3 hover:bg-muted/40 transition-colors"
               >
                 <div className="flex items-center gap-3 min-w-0">
