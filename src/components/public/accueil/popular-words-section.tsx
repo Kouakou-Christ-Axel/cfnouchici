@@ -9,7 +9,7 @@ async function PopularWordsSection() {
     <section className="py-16 md:py-20">
       <div className="content-container">
         <div className="flex items-center justify-between mb-8">
-          <h2 className="font-[family-name:var(--font-heading)] text-2xl font-extrabold tracking-tight">
+          <h2 className="font-(family-name:--font-heading) text-2xl font-extrabold tracking-tight">
             Mots du moment
           </h2>
           <Link

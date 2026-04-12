@@ -12,7 +12,7 @@ async function RecentWordsSection() {
       <div className="content-container">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
-          <h2 className="font-[family-name:var(--font-heading)] text-2xl font-extrabold tracking-tight">
+          <h2 className="font-(family-name:--font-heading) text-2xl font-extrabold tracking-tight">
             Derniers ajouts
           </h2>
           <Button variant="outline" className="rounded-full" asChild>

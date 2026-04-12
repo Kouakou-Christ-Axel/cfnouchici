@@ -24,7 +24,7 @@ export function WordCard({ slug, mot, definition, categorie, authorName }: WordC
           {categoryLabel(categorie)}
         </span>
 
-        <p className="font-[family-name:var(--font-heading)] text-xl font-extrabold uppercase tracking-tight mt-2.5">
+        <p className="font-(family-name:--font-heading) text-xl font-extrabold uppercase tracking-tight mt-2.5">
           {mot}
         </p>
 

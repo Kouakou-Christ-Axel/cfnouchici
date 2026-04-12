@@ -16,7 +16,7 @@ export default function Navbar() {
       <nav className="content-container flex items-center justify-between h-16">
         <Link
           href="/"
-          className="font-[family-name:var(--font-heading)] text-xl font-extrabold tracking-tight"
+          className="font-(family-name:--font-heading) text-xl font-extrabold tracking-tight"
         >
           nouchi<span className="text-red-500">.</span>ci
         </Link>

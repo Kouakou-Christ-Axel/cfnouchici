@@ -17,7 +17,7 @@ export function HeroStats({ stats }: HeroStatsProps) {
     <div className="flex justify-center gap-10 md:gap-16 mt-12 pt-8 border-t border-border">
       {items.map((item) => (
         <div key={item.label} className="text-center">
-          <div className="font-[family-name:var(--font-heading)] text-3xl font-extrabold tracking-tight">
+          <div className="font-(family-name:--font-heading) text-3xl font-extrabold tracking-tight">
             {item.value}
           </div>
           <div className="text-xs text-muted-foreground uppercase tracking-widest mt-1">

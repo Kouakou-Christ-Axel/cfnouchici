@@ -1,14 +1,14 @@
 services:
-  app:
-    build: .
-    ports:
-      - "3000:3000"
-    environment:
-      - DATABASE_URL=postgresql://nouchici:nouchici@db:5432/nouchici
-      - NEXT_PUBLIC_API_URL=http://localhost:3000
-    depends_on:
-      db:
-        condition: service_healthy
+#  app:
+#    build: .
+#    ports:
+#      - "3000:3000"
+#    environment:
+#      - DATABASE_URL=postgresql://nouchici:nouchici@db:5432/nouchici
+#      - NEXT_PUBLIC_API_URL=http://localhost:3000
+#    depends_on:
+#      db:
+#        condition: service_healthy
 
   db:
     image: postgres:15-alpine

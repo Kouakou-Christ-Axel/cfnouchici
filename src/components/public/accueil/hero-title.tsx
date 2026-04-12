@@ -14,7 +14,7 @@ export function HeroTitle({ wordCount }: HeroTitleProps) {
         🇨🇮 +{wordCount} mots documentés par la communauté
       </Badge>
 
-      <h1 className="font-[family-name:var(--font-heading)] text-5xl sm:text-6xl lg:text-7xl font-black tracking-[-0.04em] leading-[0.95]">
+      <h1 className="font-(family-name:--font-heading) text-5xl sm:text-6xl lg:text-7xl font-black tracking-[-0.04em] leading-[0.95]">
         C'est quoi
         <br />
         ce <span className="text-accent-gradient">mot</span> là ?

@@ -29,7 +29,7 @@ export function ProposerPreview({ mot, definition, categorie, exemples }: Propos
         </span>
       )}
 
-      <h3 className="font-[family-name:var(--font-heading)] text-3xl font-extrabold uppercase tracking-[-0.02em]">
+      <h3 className="font-(family-name:--font-heading) text-3xl font-extrabold uppercase tracking-[-0.02em]">
         {mot.trim() || "Ton mot"}
       </h3>
 
