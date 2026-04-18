@@ -6,12 +6,12 @@ interface ShareParams {
 
 export function getShareUrl({ slug, baseUrl }: Pick<ShareParams, "slug" | "baseUrl">): string {
   const base = baseUrl ?? (typeof window !== "undefined" ? window.location.origin : "https://nouchi.ci");
-  return `${base}/mots/${slug}?vote=1&utm_source=share&utm_medium=link`;
+  return `${base}/mots/${slug}?utm_source=share&utm_medium=link`;
 }
 
 export function getWhatsAppShareUrl({ mot, slug, baseUrl }: ShareParams): string {
   const url = getShareUrl({ slug, baseUrl });
-  const text = `Tu connais "${mot}" ? Vote ici → ${url}`;
+  const text = `Tu connais "${mot}" ? Découvres-le → ${url}`;
   return `https://wa.me/?text=${encodeURIComponent(text)}`;
 }
 
@@ -27,7 +27,7 @@ export async function nativeShare({ mot, slug }: ShareParams): Promise<boolean> 
   try {
     await navigator.share({
       title: `Tu connais "${mot}" en Nouchi ?`,
-      text: `Vote sur la définition de "${mot}" — le dictionnaire du Nouchi`,
+      text: `Découvre la définition de "${mot}" — le dictionnaire du Nouchi`,
       url,
     });
     return true;
