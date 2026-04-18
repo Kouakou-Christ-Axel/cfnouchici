@@ -1,3 +1,4 @@
+// src/components/layouts/general/navbar.tsx
 "use client";
 
 import Link from "next/link";
@@ -6,6 +7,7 @@ import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { NavLinks } from "@/components/layouts/general/nav-links";
 import { NavAuth } from "@/components/layouts/general/nav-auth";
+import { SearchBar } from "@/components/layouts/general/search-bar";
 import { navLinks } from "@/config/navigation";
 
 export default function Navbar() {
@@ -23,19 +25,24 @@ export default function Navbar() {
 
         <NavLinks links={navLinks} className="hidden md:flex gap-6" />
 
-        <div className="hidden md:flex items-center gap-3">
+        {/* Desktop: search + auth */}
+        <div className="hidden md:flex items-center gap-1">
+          <SearchBar />
           <NavAuth />
         </div>
 
-        <Button
-          variant="ghost"
-          size="icon"
-          className="md:hidden"
-          onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label={mobileOpen ? "Fermer le menu" : "Ouvrir le menu"}
-        >
-          {mobileOpen ? <X className="size-5" /> : <Menu className="size-5" />}
-        </Button>
+        {/* Mobile: search icon + hamburger */}
+        <div className="md:hidden flex items-center gap-1">
+          <SearchBar />
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label={mobileOpen ? "Fermer le menu" : "Ouvrir le menu"}
+          >
+            {mobileOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+          </Button>
+        </div>
       </nav>
 
       {mobileOpen && (
