@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getMotBySlug, listAllMotsValides } from "@/lib/queries/mots";
+import { buildMotMetadata, buildMotJsonLd } from "@/lib/seo";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent } from "@/components/ui/card";
@@ -35,10 +36,7 @@ export async function generateMetadata({
 	const { slug } = await params;
 	const mot = await getMotBySlug(slug);
 	if (!mot) return {};
-	return {
-		title: `${mot.mot} — Nouchici`,
-		description: mot.definition,
-	};
+	return buildMotMetadata(mot);
 }
 
 /* ─── Page ────────────────────────────────────────────── */
@@ -63,8 +61,14 @@ export default async function MotDetailPage({
 
 	const formattedDate = format(mot.createdAt, "d MMMM yyyy", { locale: fr });
 
+	const jsonLd = buildMotJsonLd(mot);
+
 	return (
 		<div className="content-container py-12 space-y-10">
+			<script
+				type="application/ld+json"
+				dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+			/>
 
 			{/* ← Retour */}
 			<div className="flex items-center gap-3">
