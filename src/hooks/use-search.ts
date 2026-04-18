@@ -31,7 +31,7 @@ export function useSearch(query: string) {
           `/api/search?q=${encodeURIComponent(query.trim())}`,
           { signal: controller.signal }
         );
-        if (!res.ok) return;
+        if (!res.ok) { setResults([]); return; }
         const json = await res.json();
         setResults(json.data ?? []);
       } catch (err) {
@@ -39,7 +39,7 @@ export function useSearch(query: string) {
           setResults([]);
         }
       } finally {
-        setLoading(false);
+        if (!controller.signal.aborted) setLoading(false);
       }
     }, 250);
 
