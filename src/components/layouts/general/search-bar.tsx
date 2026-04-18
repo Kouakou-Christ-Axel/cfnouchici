@@ -24,6 +24,7 @@ interface SuggestionsListProps {
   query: string;
   activeIndex: number;
   onClose: () => void;
+  listboxId: string;
 }
 
 function SuggestionsList({
@@ -31,9 +32,10 @@ function SuggestionsList({
   query,
   activeIndex,
   onClose,
+  listboxId,
 }: SuggestionsListProps) {
   return (
-    <div id="search-listbox" role="listbox" className="rounded-xl border bg-popover shadow-lg overflow-hidden">
+    <div id={listboxId} role="listbox" className="rounded-xl border bg-popover shadow-lg overflow-hidden">
       {results.map((result, i) => (
         <Link
           key={result.id}
@@ -74,7 +76,7 @@ function SuggestionsList({
           activeIndex === results.length && "bg-muted/50"
         )}
       >
-        Voir les {results.length} résultat{results.length > 1 ? "s" : ""} pour &ldquo;{query}&rdquo;&nbsp;→
+        Voir {results.length > 1 ? `les ${results.length} résultats` : "le résultat"} pour &ldquo;{query}&rdquo;&nbsp;→
       </Link>
     </div>
   );
@@ -191,7 +193,7 @@ export function SearchBar() {
               role="combobox"
               aria-expanded={showSuggestions}
               aria-haspopup="listbox"
-              aria-controls="search-listbox"
+              aria-controls="search-listbox-desktop"
               aria-activedescendant={ariaActiveDescendant}
               value={query}
               onChange={(e) => {
@@ -238,6 +240,7 @@ export function SearchBar() {
               query={query}
               activeIndex={activeIndex}
               onClose={reset}
+              listboxId="search-listbox-desktop"
             />
           </div>
         )}
@@ -277,7 +280,7 @@ export function SearchBar() {
                 role="combobox"
                 aria-expanded={showSuggestions}
                 aria-haspopup="listbox"
-                aria-controls="search-listbox"
+                aria-controls="search-listbox-mobile"
                 aria-activedescendant={ariaActiveDescendant}
                 value={query}
                 onChange={(e) => {
@@ -306,6 +309,7 @@ export function SearchBar() {
                 query={query}
                 activeIndex={activeIndex}
                 onClose={reset}
+                listboxId="search-listbox-mobile"
               />
             )}
             {showEmpty && (

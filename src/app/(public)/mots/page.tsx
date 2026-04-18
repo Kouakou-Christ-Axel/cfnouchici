@@ -14,7 +14,6 @@ import { WordGroup } from "@/components/public/mots/word-group";
 import { ScrollToTop } from "@/components/ui/scroll-to-top";
 
 export const dynamic = "force-dynamic";
-export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Tous les mots — Nouchici",
