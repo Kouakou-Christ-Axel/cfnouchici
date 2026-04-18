@@ -1,37 +1,24 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useSearchModal } from "@/components/search/search-context";
 
 export function HeroSearch() {
-  const [query, setQuery] = useState("");
-  const router = useRouter();
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (query.trim()) {
-      router.push(`/mots?search=${encodeURIComponent(query.trim())}`);
-    }
-  }
+  const { open } = useSearchModal();
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="flex items-center w-full max-w-xl mx-auto bg-card border border-border rounded-full overflow-hidden mt-8 focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 transition-shadow"
+    <button
+      onClick={open}
+      className="flex items-center w-full max-w-xl mx-auto bg-card border border-border rounded-full overflow-hidden mt-8 focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 transition-shadow hover:border-foreground/30 hover:shadow-md transition-all cursor-text"
+      aria-label="Ouvrir la recherche"
     >
       <Search className="size-4 text-muted-foreground ml-5 shrink-0" />
-      <input
-        type="text"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder='Ex: "goumin", "choco", "garba"...'
-        className="flex-1 bg-transparent border-0 outline-none px-3 py-4 text-base placeholder:text-muted-foreground"
-      />
-      <Button type="submit" className="rounded-full m-1.5 shrink-0">
-        Chercher
-      </Button>
-    </form>
+      <span className="flex-1 bg-transparent border-0 outline-none px-3 py-4 text-base text-muted-foreground text-left">
+        Ex: &quot;goumin&quot;, &quot;choco&quot;, &quot;garba&quot;...
+      </span>
+      <kbd className="flex items-center gap-1 text-xs text-muted-foreground border rounded px-1.5 py-0.5 font-mono mr-4 shrink-0">
+        ⌘K
+      </kbd>
+    </button>
   );
 }
