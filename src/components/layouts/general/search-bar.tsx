@@ -33,10 +33,11 @@ function SuggestionsList({
   onClose,
 }: SuggestionsListProps) {
   return (
-    <div role="listbox" className="rounded-xl border bg-popover shadow-lg overflow-hidden">
+    <div id="search-listbox" role="listbox" className="rounded-xl border bg-popover shadow-lg overflow-hidden">
       {results.map((result, i) => (
         <Link
           key={result.id}
+          id={`search-option-${result.id}`}
           href={`/mots/${result.slug}`}
           role="option"
           aria-selected={i === activeIndex}
@@ -63,6 +64,7 @@ function SuggestionsList({
         </Link>
       ))}
       <Link
+        id="search-option-view-all"
         href={`/mots?search=${encodeURIComponent(query)}`}
         role="option"
         aria-selected={activeIndex === results.length}
@@ -92,9 +94,22 @@ export function SearchBar() {
   const inputRef = useRef<HTMLInputElement>(null);
   const mobileInputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const fetchedOnce = useRef(false);
 
   const showSuggestions = results.length > 0 && query.trim().length >= 2;
-  const showEmpty = !loading && query.trim().length >= 2 && results.length === 0;
+  const showEmpty = fetchedOnce.current && !loading && query.trim().length >= 2 && results.length === 0;
+
+  const ariaActiveDescendant =
+    activeIndex >= 0 && activeIndex < results.length
+      ? `search-option-${results[activeIndex].id}`
+      : activeIndex === results.length
+        ? "search-option-view-all"
+        : undefined;
+
+  // Track when a fetch has been initiated for the current query (prevents flicker)
+  useEffect(() => {
+    if (loading) fetchedOnce.current = true;
+  }, [loading]);
 
   // Auto-focus desktop input on expand
   useEffect(() => {
@@ -127,6 +142,7 @@ export function SearchBar() {
     setIsExpanded(false);
     setIsMobileOpen(false);
     setActiveIndex(-1);
+    fetchedOnce.current = false;
   }
 
   function handleKeyDown(e: React.KeyboardEvent) {
@@ -175,10 +191,13 @@ export function SearchBar() {
               role="combobox"
               aria-expanded={showSuggestions}
               aria-haspopup="listbox"
+              aria-controls="search-listbox"
+              aria-activedescendant={ariaActiveDescendant}
               value={query}
               onChange={(e) => {
                 setQuery(e.target.value);
                 setActiveIndex(-1);
+                fetchedOnce.current = false;
               }}
               onKeyDown={handleKeyDown}
               placeholder="Chercher un mot..."
@@ -258,10 +277,13 @@ export function SearchBar() {
                 role="combobox"
                 aria-expanded={showSuggestions}
                 aria-haspopup="listbox"
+                aria-controls="search-listbox"
+                aria-activedescendant={ariaActiveDescendant}
                 value={query}
                 onChange={(e) => {
                   setQuery(e.target.value);
                   setActiveIndex(-1);
+                  fetchedOnce.current = false;
                 }}
                 onKeyDown={handleKeyDown}
                 placeholder="Chercher un mot nouchi..."
