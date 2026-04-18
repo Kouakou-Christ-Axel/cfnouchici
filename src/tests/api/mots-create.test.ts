@@ -48,4 +48,13 @@ describe("createMot", () => {
       createMot({ mot: "unique", definition: "Autre", exemples: [] }, userId)
     ).rejects.toThrow("SLUG_EXISTS");
   });
+
+  it("creates a word without a user (anonymous)", async () => {
+    const mot = await createMot(
+      { mot: "Gogoro", definition: "Quelqu'un de bizarre", exemples: [] },
+      null
+    );
+    expect(mot.statut).toBe("EN_ATTENTE");
+    expect(mot.soumisParId).toBeNull();
+  });
 });

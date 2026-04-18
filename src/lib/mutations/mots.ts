@@ -2,7 +2,7 @@ import { db } from "@/lib/db";
 import { generateSlug } from "@/lib/slug";
 import type { CreateMotInput, UpdateMotInput } from "@/lib/validators/mot";
 
-export async function createMot(input: CreateMotInput, userId: string) {
+export async function createMot(input: CreateMotInput, userId: string | null) {
   const slug = generateSlug(input.mot);
 
   const existing = await db.mot.findUnique({ where: { slug } });
