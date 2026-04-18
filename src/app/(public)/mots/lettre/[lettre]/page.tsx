@@ -46,6 +46,12 @@ export default async function LettreListPage({
 
 	const mots = await listMotsValidesByLettre(letter);
 
+	const allMots = await listAllMotsValides();
+	const availableLetters = [...new Set(allMots.map((m) => m.mot[0].toUpperCase()))].sort();
+	const currentIndex = availableLetters.indexOf(letter);
+	const prevLetter = currentIndex > 0 ? availableLetters[currentIndex - 1] : null;
+	const nextLetter = currentIndex < availableLetters.length - 1 ? availableLetters[currentIndex + 1] : null;
+
 	if (mots.length === 0) notFound();
 
 	return (
@@ -120,12 +126,33 @@ export default async function LettreListPage({
 			{/* Navigation entre lettres */}
 			<Separator />
 			<div className="flex items-center justify-between gap-4">
-				<p className="text-xs text-muted-foreground">
-					Tu cherches une autre lettre ?
-				</p>
-				<Button variant="outline" size="sm" asChild>
-					<Link href="/mots">Voir toutes les lettres</Link>
+				<div>
+					{prevLetter ? (
+						<Button variant="outline" size="sm" asChild>
+							<Link href={`/mots/lettre/${prevLetter.toLowerCase()}`}>
+								<ArrowLeft className="size-3.5 mr-1" />
+								Lettre {prevLetter}
+							</Link>
+						</Button>
+					) : (
+						<div />
+					)}
+				</div>
+				<Button variant="ghost" size="sm" asChild>
+					<Link href="/mots">Toutes les lettres</Link>
 				</Button>
+				<div>
+					{nextLetter ? (
+						<Button variant="outline" size="sm" asChild>
+							<Link href={`/mots/lettre/${nextLetter.toLowerCase()}`}>
+								Lettre {nextLetter}
+								<ArrowRight className="size-3.5 ml-1" />
+							</Link>
+						</Button>
+					) : (
+						<div />
+					)}
+				</div>
 			</div>
 
 			<ScrollToTop />
