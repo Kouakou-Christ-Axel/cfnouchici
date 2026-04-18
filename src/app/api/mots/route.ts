@@ -20,9 +20,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const session = await auth.api.getSession({ headers: await headers() });
-  if (!session) {
-    return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
-  }
+  const userId = session?.user.id ?? null;
 
   const body = await request.json();
   const parsed = createMotSchema.safeParse(body);
@@ -31,7 +29,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const mot = await createMot(parsed.data, session.user.id);
+    const mot = await createMot(parsed.data, userId);
     return NextResponse.json(mot, { status: 201 });
   } catch (e) {
     if (e instanceof Error && e.message === "SLUG_EXISTS") {
