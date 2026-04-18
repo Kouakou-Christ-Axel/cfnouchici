@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useEffect, useState, useCallback } from "react";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ThumbsUp, Eye, HelpCircle, Check, AlertTriangle, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { authClient } from "@/lib/auth-client";
+import { VoteAuthModal } from "@/components/public/mots/vote-auth-modal";
 
 /* ─── Types ────────────────────────────────────────────── */
 
@@ -22,6 +22,12 @@ interface VoteSummary {
 interface UserVote {
   connaissance: ConnaissanceOption;
   exactitude: ExactitudeOption;
+}
+
+interface PendingVote {
+  slug: string;
+  field: "connaissance" | "exactitude";
+  value: string;
 }
 
 /* ─── Option configs ────────────────────────────────────── */
@@ -61,6 +67,7 @@ export function VoteSection({ slug }: VoteSectionProps) {
   const [pendingConnaissance, setPendingConnaissance] = useState<ConnaissanceOption | null>(null);
   const [pendingExactitude, setPendingExactitude] = useState<ExactitudeOption | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   /* ── Fetch summary ────────────────────────────────────── */
   const fetchSummary = useCallback(async () => {
@@ -78,6 +85,25 @@ export function VoteSection({ slug }: VoteSectionProps) {
   useEffect(() => {
     fetchSummary();
   }, [fetchSummary]);
+
+  /* ── Restore pending vote after login ────────────────── */
+  useEffect(() => {
+    if (!session?.user) return;
+    const raw = localStorage.getItem("pending_vote");
+    if (!raw) return;
+    try {
+      const pending: PendingVote = JSON.parse(raw);
+      if (pending.slug !== slug) return;
+      localStorage.removeItem("pending_vote");
+      if (pending.field === "connaissance") {
+        setPendingConnaissance(pending.value as ConnaissanceOption);
+      } else {
+        setPendingExactitude(pending.value as ExactitudeOption);
+      }
+    } catch {
+      localStorage.removeItem("pending_vote");
+    }
+  }, [session?.user, slug]);
 
   /* ── Submit vote ──────────────────────────────────────── */
   const submitVote = useCallback(
@@ -103,9 +129,23 @@ export function VoteSection({ slug }: VoteSectionProps) {
     [slug, isSubmitting, fetchSummary]
   );
 
+  /* ── Handle unauth click ────────────────────────────── */
+  function handleUnauthClick(field: "connaissance" | "exactitude", value: string) {
+    localStorage.setItem("pending_vote", JSON.stringify({ slug, field, value }));
+    setIsModalOpen(true);
+  }
+
+  /* ── Handle modal cancel ────────────────────────────── */
+  function handleModalCancel() {
+    localStorage.removeItem("pending_vote");
+  }
+
   /* ── Handle selection ─────────────────────────────────── */
   function handleConnaissance(value: ConnaissanceOption) {
-    if (!isAuthenticated) return;
+    if (!isAuthenticated) {
+      handleUnauthClick("connaissance", value);
+      return;
+    }
     const next = pendingConnaissance === value ? null : value;
     setPendingConnaissance(next);
     if (next && pendingExactitude) {
@@ -114,7 +154,10 @@ export function VoteSection({ slug }: VoteSectionProps) {
   }
 
   function handleExactitude(value: ExactitudeOption) {
-    if (!isAuthenticated) return;
+    if (!isAuthenticated) {
+      handleUnauthClick("exactitude", value);
+      return;
+    }
     const next = pendingExactitude === value ? null : value;
     setPendingExactitude(next);
     if (pendingConnaissance && next) {
@@ -127,91 +170,87 @@ export function VoteSection({ slug }: VoteSectionProps) {
   const activeExactitude = userVote?.exactitude ?? pendingExactitude;
 
   return (
-    <Card className="gap-0 py-0">
-      <CardContent className="px-5 py-5 space-y-6">
+    <>
+      <VoteAuthModal
+        open={isModalOpen}
+        onOpenChange={setIsModalOpen}
+        slug={slug}
+        onCancel={handleModalCancel}
+      />
 
-        {/* ── Question 1 ──────────────────────────────────── */}
-        <div className="space-y-3">
-          <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest">
-            Tu connais ce mot ?
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {CONNAISSANCE_OPTIONS.map(({ value, label, icon: Icon }) => {
-              const count = summary?.connaissance[value] ?? 0;
-              const isSelected = activeConnaissance === value;
-              return (
-                <Button
-                  key={value}
-                  variant="outline"
-                  size="sm"
-                  disabled={!isAuthenticated || isSubmitting}
-                  onClick={() => handleConnaissance(value)}
-                  className={cn(
-                    "gap-2",
-                    isSelected && "border-foreground bg-muted"
-                  )}
-                >
-                  <Icon className="size-3.5" />
-                  {label}
-                  {summary && (
-                    <span className="ml-1 font-semibold text-muted-foreground">
-                      {count}
-                    </span>
-                  )}
-                </Button>
-              );
-            })}
+      <Card className="gap-0 py-0">
+        <CardContent className="px-5 py-5 space-y-6">
+
+          {/* ── Question 1 ──────────────────────────────────── */}
+          <div className="space-y-3">
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest">
+              Tu connais ce mot ?
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {CONNAISSANCE_OPTIONS.map(({ value, label, icon: Icon }) => {
+                const count = summary?.connaissance[value] ?? 0;
+                const isSelected = activeConnaissance === value;
+                return (
+                  <Button
+                    key={value}
+                    variant="outline"
+                    size="sm"
+                    disabled={isSubmitting}
+                    onClick={() => handleConnaissance(value)}
+                    className={cn(
+                      "gap-2",
+                      isSelected && "border-foreground bg-muted"
+                    )}
+                  >
+                    <Icon className="size-3.5" />
+                    {label}
+                    {summary && (
+                      <span className="ml-1 font-semibold text-muted-foreground">
+                        {count}
+                      </span>
+                    )}
+                  </Button>
+                );
+              })}
+            </div>
           </div>
-        </div>
 
-        {/* ── Question 2 ──────────────────────────────────── */}
-        <div className="space-y-3">
-          <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest">
-            La définition est correcte ?
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {EXACTITUDE_OPTIONS.map(({ value, label, icon: Icon }) => {
-              const count = summary?.exactitude[value] ?? 0;
-              const isSelected = activeExactitude === value;
-              return (
-                <Button
-                  key={value}
-                  variant="outline"
-                  size="sm"
-                  disabled={!isAuthenticated || isSubmitting}
-                  onClick={() => handleExactitude(value)}
-                  className={cn(
-                    "gap-2",
-                    isSelected && "border-foreground bg-muted"
-                  )}
-                >
-                  <Icon className="size-3.5" />
-                  {label}
-                  {summary && (
-                    <span className="ml-1 font-semibold text-muted-foreground">
-                      {count}
-                    </span>
-                  )}
-                </Button>
-              );
-            })}
+          {/* ── Question 2 ──────────────────────────────────── */}
+          <div className="space-y-3">
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest">
+              La définition est correcte ?
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {EXACTITUDE_OPTIONS.map(({ value, label, icon: Icon }) => {
+                const count = summary?.exactitude[value] ?? 0;
+                const isSelected = activeExactitude === value;
+                return (
+                  <Button
+                    key={value}
+                    variant="outline"
+                    size="sm"
+                    disabled={isSubmitting}
+                    onClick={() => handleExactitude(value)}
+                    className={cn(
+                      "gap-2",
+                      isSelected && "border-foreground bg-muted"
+                    )}
+                  >
+                    <Icon className="size-3.5" />
+                    {label}
+                    {summary && (
+                      <span className="ml-1 font-semibold text-muted-foreground">
+                        {count}
+                      </span>
+                    )}
+                  </Button>
+                );
+              })}
+            </div>
           </div>
-        </div>
 
-        {/* ── Auth prompt ─────────────────────────────────── */}
-        {!isAuthenticated && (
-          <p className="text-xs text-muted-foreground">
-            <Link
-              href="/connexion"
-              className="underline underline-offset-4 hover:text-foreground transition-colors"
-            >
-              Connecte-toi
-            </Link>{" "}
-            pour voter.
-          </p>
-        )}
-
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </>
   );
 }
