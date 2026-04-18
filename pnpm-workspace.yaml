@@ -1,3 +1,6 @@
+overrides:
+  "@next/env": "npm:@varlock/nextjs-integration"
+
 ignoredBuiltDependencies:
   - '@heroui/shared-utils'
   - '@prisma/engines'
