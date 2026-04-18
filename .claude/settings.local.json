@@ -61,7 +61,22 @@
       "Bash(rm -f /c/Users/kouax/WebstormProjects/cfnouchici/src/components/public/accueil/popular-word-badge.tsx)",
       "Bash(rm -f /c/Users/kouax/WebstormProjects/cfnouchici/src/components/public/accueil/trust-section.tsx)",
       "Bash(taskkill /F /IM node.exe)",
-      "Bash(rm -f \"/c/Users/kouax/WebstormProjects/cfnouchici/.next/lock\")"
+      "Bash(rm -f \"/c/Users/kouax/WebstormProjects/cfnouchici/.next/lock\")",
+      "WebSearch",
+      "WebFetch(domain:varlock.dev)",
+      "WebFetch(domain:animate-ui.com)",
+      "Bash(xargs head *)",
+      "Bash(rtk vitest *)",
+      "Bash(rtk tsc *)",
+      "WebFetch(domain:www.fumadocs.dev)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:www.npmjs.com)",
+      "Bash(pnpm vitest *)",
+      "Bash(pnpm tsc *)",
+      "Bash(npx next *)",
+      "Bash(pnpm exec *)",
+      "Bash(npm exec *)"
     ]
   }
 }
