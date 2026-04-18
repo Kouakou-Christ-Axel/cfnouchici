@@ -1,10 +1,20 @@
 import Link from "next/link";
-import { getPopularMots } from "@/lib/queries/mots";
+import type { Categorie } from "@/generated/prisma";
 import { WordCard } from "@/components/public/accueil/word-card";
 
-async function PopularWordsSection() {
-  const mots = await getPopularMots(6);
+interface MotSummary {
+  slug: string;
+  mot: string;
+  definition: string | null;
+  categorie: Categorie | null;
+  soumisPar: { name: string } | null;
+}
 
+interface PopularWordsSectionProps {
+  mots: MotSummary[];
+}
+
+function PopularWordsSection({ mots }: PopularWordsSectionProps) {
   return (
     <section className="py-16 md:py-20">
       <div className="content-container">

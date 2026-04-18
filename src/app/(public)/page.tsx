@@ -3,10 +3,10 @@ import HeroSection from "@/components/public/accueil/hero-section";
 import PopularWordsSection from "@/components/public/accueil/popular-words-section";
 import RecentWordsSection from "@/components/public/accueil/recent-words-section";
 import { Separator } from "@/components/ui/separator";
-
 import { db } from "@/lib/db";
+import { getPopularMots } from "@/lib/queries/mots";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
   const count = await db.mot.count({ where: { statut: "VALIDE" } });
@@ -16,14 +16,20 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function Home() {
+export default async function Home() {
+  const [mots, wordCount, contributorCount, voteCount] = await Promise.all([
+    getPopularMots(6),
+    db.mot.count({ where: { statut: "VALIDE" } }),
+    db.user.count(),
+    db.voteMot.count(),
+  ]);
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: "Nouchici",
     url: process.env.NEXT_PUBLIC_API_URL ?? "https://nouchi.ci",
-    description:
-      "Le dictionnaire collaboratif du nouchi, l'argot urbain ivoirien.",
+    description: "Le dictionnaire collaboratif du nouchi, l'argot urbain ivoirien.",
     potentialAction: {
       "@type": "SearchAction",
       target: {
@@ -40,9 +46,14 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <HeroSection />
+      <HeroSection
+        mots={mots}
+        wordCount={wordCount}
+        contributorCount={contributorCount}
+        voteCount={voteCount}
+      />
       <Separator />
-      <PopularWordsSection />
+      <PopularWordsSection mots={mots} />
       <Separator />
       <RecentWordsSection />
     </>
