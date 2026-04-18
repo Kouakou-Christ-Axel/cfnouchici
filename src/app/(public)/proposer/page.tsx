@@ -1,9 +1,6 @@
-import { getSessionOrRedirect } from "@/lib/auth-guard";
 import { ProposerForm } from "@/components/public/proposer/proposer-form";
 
-export default async function ProposerPage() {
-  await getSessionOrRedirect("/proposer");
-
+export default function ProposerPage() {
   return (
     <div className="content-container py-12">
       <div className="max-w-3xl mx-auto space-y-8">
