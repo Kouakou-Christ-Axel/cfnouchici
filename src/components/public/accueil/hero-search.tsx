@@ -9,7 +9,7 @@ export function HeroSearch() {
   return (
     <button
       onClick={open}
-      className="flex items-center w-full max-w-xl mx-auto bg-card border border-border rounded-full overflow-hidden mt-8 focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 transition-shadow hover:border-foreground/30 hover:shadow-md transition-all cursor-text"
+      className="flex items-center w-full max-w-xl mx-auto bg-card border border-border rounded-full overflow-hidden mt-8 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 hover:border-foreground/30 hover:shadow-md transition-all cursor-pointer"
       aria-label="Ouvrir la recherche"
     >
       <Search className="size-4 text-muted-foreground ml-5 shrink-0" />

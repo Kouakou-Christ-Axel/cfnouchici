@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { Search, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useHotkey } from "@tanstack/react-hotkeys";
 import { useSearchModal } from "@/components/search/search-context";
 import { useSearch } from "@/hooks/use-search";
@@ -17,8 +17,8 @@ export function SearchModal() {
   const { isOpen, open, close } = useSearchModal();
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(-1);
+  const [fetchedOnce, setFetchedOnce] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const fetchedOnce = useRef(false);
   const router = useRouter();
 
   const { results, loading } = useSearch(query);
@@ -28,14 +28,15 @@ export function SearchModal() {
     fetchedOnce.current && !loading && query.trim().length >= 2 && results.length === 0;
 
   // Mod+K to open
-  useHotkey("Mod+K", (e) => {
+  const handleCmdK = useCallback((e: KeyboardEvent) => {
     e.preventDefault();
     open();
-  });
+  }, [open]);
+  useHotkey("Mod+K", handleCmdK);
 
   // Track fetch initiated
   useEffect(() => {
-    if (loading) fetchedOnce.current = true;
+    if (loading) setFetchedOnce(true);
   }, [loading]);
 
   // Auto-focus input when opened
@@ -49,7 +50,7 @@ export function SearchModal() {
   function reset() {
     setQuery("");
     setActiveIndex(-1);
-    fetchedOnce.current = false;
+    setFetchedOnce(false);
     close();
   }
 
@@ -140,11 +141,12 @@ export function SearchModal() {
                     aria-haspopup="listbox"
                     aria-controls="sm-listbox"
                     aria-activedescendant={ariaActiveDescendant}
+                    aria-label="Rechercher un mot"
                     value={query}
                     onChange={(e) => {
                       setQuery(e.target.value);
                       setActiveIndex(-1);
-                      fetchedOnce.current = false;
+                      setFetchedOnce(false);
                     }}
                     onKeyDown={handleKeyDown}
                     placeholder="Chercher un mot nouchi..."
@@ -192,7 +194,7 @@ export function SearchModal() {
                     ))}
                     <Link
                       id="sm-option-view-all"
-                      href={`/mots?search=${encodeURIComponent(query)}`}
+                      href={`/mots?search=${encodeURIComponent(query.trim())}`}
                       role="option"
                       aria-selected={activeIndex === results.length}
                       onClick={reset}
@@ -205,7 +207,7 @@ export function SearchModal() {
                       {results.length > 1
                         ? `les ${results.length} résultats`
                         : "le résultat"}{" "}
-                      pour &ldquo;{query}&rdquo;&nbsp;→
+                      pour &ldquo;{query.trim()}&rdquo;&nbsp;→
                     </Link>
                   </div>
                 )}
