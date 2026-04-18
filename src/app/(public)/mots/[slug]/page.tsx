@@ -10,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, Quote, User, CalendarDays } from "lucide-react";
 import { categoryColor, categoryLabel } from "@/lib/category";
 import { VoteSection } from "@/components/public/mots/vote-section";
+import { ShareButton } from "@/components/share/share-button";
 import { ScrollToTop } from "@/components/ui/scroll-to-top";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -96,9 +97,12 @@ export default async function MotDetailPage({
 
 					{/* Mot + catégorie */}
 					<header className="space-y-4">
-						<span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${categoryColor(mot.categorie)}`}>
-							{categoryLabel(mot.categorie)}
-						</span>
+						<div className="flex items-center justify-between gap-3">
+							<span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${categoryColor(mot.categorie)}`}>
+								{categoryLabel(mot.categorie)}
+							</span>
+							<ShareButton mot={mot.mot} slug={slug} size="sm" variant="outline" />
+						</div>
 						<h1 className="text-5xl sm:text-6xl font-semibold tracking-tight uppercase leading-none">
 							{mot.mot}
 						</h1>
