@@ -25,8 +25,8 @@ interface DashboardShellProps {
 export function DashboardShell({ user, children }: DashboardShellProps) {
   return (
     <SidebarProvider>
-      <Sidebar>
-        <SidebarHeader className="border-b border-sidebar-border p-4">
+      <Sidebar variant="inset">
+        <SidebarHeader className="border-b p-4">
           <Link
             href="/"
             className="font-(family-name:--font-heading) font-extrabold text-lg tracking-tight"
@@ -41,7 +41,7 @@ export function DashboardShell({ user, children }: DashboardShellProps) {
         <header className="flex items-center h-14 border-b border-border px-4 md:hidden">
           <SidebarTrigger />
         </header>
-        <main className="flex-1 p-6 md:p-8">{children}</main>
+        <div className="p-6">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );

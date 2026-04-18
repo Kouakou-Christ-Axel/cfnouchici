@@ -12,4 +12,18 @@ export const auth = betterAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     },
   },
+  user: {
+    additionalFields: {
+      role: {
+        type: "string",
+        defaultValue: "USER",
+        input: false,
+      },
+      banned: {
+        type: "boolean",
+        defaultValue: false,
+        input: false,
+      },
+    },
+  },
 });
