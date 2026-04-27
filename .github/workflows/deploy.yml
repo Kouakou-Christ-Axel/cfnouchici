@@ -1,0 +1,24 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    name: Deploy to Dokploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger Dokploy deploy
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" \
+            -X POST "${{ secrets.DOKPLOY_WEBHOOK_URL }}" \
+            -H "Content-Type: application/json")
+          echo "HTTP status: $response"
+          if [[ "$response" =~ ^2 ]]; then
+            echo "Deploy triggered successfully"
+          else
+            echo "Deploy webhook failed with status $response"
+            exit 1
+          fi
