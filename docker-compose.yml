@@ -1,14 +1,19 @@
 services:
-#  app:
-#    build: .
-#    ports:
-#      - "3000:3000"
-#    environment:
-#      - DATABASE_URL=postgresql://nouchici:nouchici@db:5432/nouchici
-#      - NEXT_PUBLIC_API_URL=http://localhost:3000
-#    depends_on:
-#      db:
-#        condition: service_healthy
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+      - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
+      - BETTER_AUTH_URL=${BETTER_AUTH_URL}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
 
   db:
     image: postgres:15-alpine
