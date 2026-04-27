@@ -103,6 +103,7 @@ export const TweetHeader = ({ tweet }: { tweet: EnrichedTweet }) => (
         rel="noreferrer"
         className="shrink-0"
       >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           title={`Profile picture of ${tweet.user.name}`}
           alt={tweet.user.screen_name}
@@ -197,6 +198,7 @@ export const TweetMedia = ({ tweet }: { tweet: EnrichedTweet }) => {
         <div className="relative flex transform-gpu snap-x snap-mandatory gap-4 overflow-x-auto">
           <div className="shrink-0 snap-center sm:w-2" />
           {tweet.photos.map((photo) => (
+            // eslint-disable-next-line @next/next/no-img-element
             <img
               key={photo.url}
               src={photo.url}
@@ -214,6 +216,7 @@ export const TweetMedia = ({ tweet }: { tweet: EnrichedTweet }) => {
         !tweet.photos &&
         // @ts-expect-error package doesn't have type definitions
         tweet?.card?.binding_values?.thumbnail_image_large?.image_value.url && (
+          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={
               // @ts-expect-error package doesn't have type definitions

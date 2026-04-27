@@ -6,7 +6,6 @@ import { Check, ExternalLink } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { PopularityBadge } from "@/components/dashboard/moderation/popularity-badge";
 import { RejectDialog } from "@/components/dashboard/moderation/reject-dialog";
 import { categoryLabel, categoryColor } from "@/lib/category";

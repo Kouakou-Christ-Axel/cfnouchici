@@ -15,7 +15,7 @@ export function HeroTitle({ wordCount }: HeroTitleProps) {
       </Badge>
 
       <h1 className="font-(family-name:--font-heading) text-5xl sm:text-6xl lg:text-7xl font-black tracking-[-0.04em] leading-[0.95]">
-        C'est quoi
+        C&apos;est quoi
         <br />
         ce <span className="text-accent-gradient">mot</span> là ?
       </h1>

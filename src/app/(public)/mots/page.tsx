@@ -170,7 +170,7 @@ export default async function MotsListPage({ searchParams }: PageProps) {
         <Separator/>
         <div className="flex flex-col items-center gap-4 text-center py-6">
           <p className="text-muted-foreground text-sm max-w-md">
-            Tu connais un mot qui manque ? La communauté t'attend pour l'ajouter au dictionnaire.
+            Tu connais un mot qui manque ? La communauté t&apos;attend pour l&apos;ajouter au dictionnaire.
           </p>
           <Button asChild size="lg" className="gap-2">
             <Link href="/proposer">

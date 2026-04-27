@@ -159,7 +159,7 @@ export default async function MotDetailPage({
 							<div className="flex items-center gap-3">
 								<CalendarDays className="size-4 text-muted-foreground shrink-0" />
 								<div>
-									<p className="text-xs text-muted-foreground">Date d'ajout</p>
+									<p className="text-xs text-muted-foreground">Date d&apos;ajout</p>
 									<p className="text-sm font-medium">{formattedDate}</p>
 								</div>
 							</div>
