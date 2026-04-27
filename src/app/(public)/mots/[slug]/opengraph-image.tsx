@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 import { getMotBySlug } from "@/lib/queries/mots";
 
 export const runtime = "nodejs";
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 export const contentType = "image/png";
 export const size = { width: 1200, height: 630 };
 

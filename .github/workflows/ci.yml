@@ -1,44 +1,46 @@
 name: CI
 
 on:
-  push:
-    branches: [main, master]
   pull_request:
     branches: [main]
 
 jobs:
-  lint:
-    name: Lint
+  quality:
+    name: Qualité du code
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup pnpm
+      - name: Installation de pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: latest
 
-      - name: Setup Node.js
+      - name: Configuration de Node.js 22
         uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: "pnpm"
+          cache: pnpm
 
-      - name: Install dependencies
+      - name: Installation des dépendances
         run: pnpm install --frozen-lockfile
 
-      - name: Cache Prisma client
+      - name: Cache du client Prisma
         id: prisma-cache
         uses: actions/cache@v4
         with:
           path: src/generated/prisma
           key: prisma-${{ hashFiles('prisma/schema.prisma') }}
 
-      - name: Generate Prisma client
+      - name: Génération du client Prisma
         if: steps.prisma-cache.outputs.cache-hit != 'true'
         run: pnpm db:generate
 
       - name: Lint
         run: pnpm lint
+
+      - name: Vérification TypeScript
+        run: pnpm tsc --noEmit
+
+      - name: Tests
+        run: pnpm test --passWithNoTests
