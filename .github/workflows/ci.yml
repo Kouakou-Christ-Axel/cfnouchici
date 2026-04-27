@@ -29,7 +29,15 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Cache Prisma client
+        id: prisma-cache
+        uses: actions/cache@v4
+        with:
+          path: src/generated/prisma
+          key: prisma-${{ hashFiles('prisma/schema.prisma') }}
+
       - name: Generate Prisma client
+        if: steps.prisma-cache.outputs.cache-hit != 'true'
         run: pnpm db:generate
 
       - name: Lint
