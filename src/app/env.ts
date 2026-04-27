@@ -10,11 +10,12 @@ export const env = createEnv({
     BETTER_AUTH_URL: z.string().url(),
   },
   client: {
-    NEXT_PUBLIC_API_URL: z.string().min(1),
+    NEXT_PUBLIC_API_URL: z.string().min(1).default("https://nouchi.ci"),
   },
   experimental__runtimeEnv: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
   },
+  skipValidation: !!process.env.SKIP_ENV_VALIDATION,
   onValidationError: (issues) => {
     console.error("❌ Invalid environment variables:", issues);
     process.exit(1);
