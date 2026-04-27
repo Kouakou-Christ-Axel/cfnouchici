@@ -76,7 +76,14 @@
       "Bash(pnpm tsc *)",
       "Bash(npx next *)",
       "Bash(pnpm exec *)",
-      "Bash(npm exec *)"
+      "Bash(npm exec *)",
+      "Bash(pnpm next *)",
+      "Bash(xargs grep *)",
+      "PowerShell(pnpm install *)"
     ]
-  }
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "shadcn"
+  ]
 }
