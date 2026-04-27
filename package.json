@@ -4,9 +4,9 @@
 	"private": true,
 	"scripts": {
 		"dev": "next dev",
-		"build": "prisma generate && next build && cp .env.schema .next/standalone/",
+		"build": "prisma generate && next build",
 		"start": "node .next/standalone/server.js",
-		"lint": "next lint",
+		"lint": "eslint .",
 		"db:generate": "prisma generate",
 		"db:migrate": "prisma migrate deploy",
 		"db:push": "prisma db push",
