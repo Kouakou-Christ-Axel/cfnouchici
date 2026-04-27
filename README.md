@@ -1,47 +1,88 @@
-# OpenNext Starter
+# Nouchici
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Dictionnaire collaboratif du Nouchi — l'argot urbain ivoirien.
 
-## Getting Started
+## Stack
 
-Read the documentation at https://opennext.js.org/cloudflare.
+- **Next.js 16** (App Router, Turbopack, standalone output)
+- **PostgreSQL** + **Prisma** (ORM)
+- **Better Auth** (authentification, OAuth Google)
+- **Tailwind CSS 4** + shadcn/ui + HeroUI
+- **Docker** / **Dokploy** (déploiement)
 
-## Develop
+## Démarrage local
 
-Run the Next.js development server:
+### Prérequis
 
-```bash
-npm run dev
-# or similar package manager command
-```
+- Node.js 22+
+- pnpm
+- Docker (pour PostgreSQL)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-## Preview
-
-Preview the application locally on the Cloudflare runtime:
+### Installation
 
 ```bash
-npm run preview
-# or similar package manager command
+# 1. Cloner le repo
+git clone https://github.com/Kouakou-Christ-Axel/cfnouchici.git
+cd cfnouchici
+
+# 2. Copier les variables d'environnement
+cp .env.example .env
+# Remplir les valeurs dans .env
+
+# 3. Démarrer la base de données
+docker compose up -d db
+
+# 4. Installer les dépendances
+pnpm install
+
+# 5. Appliquer les migrations et générer le client Prisma
+pnpm db:generate
+pnpm db:migrate
+
+# 6. Lancer le serveur de développement
+pnpm dev
 ```
 
-## Deploy
+L'application est disponible sur [http://localhost:3000](http://localhost:3000).
 
-Deploy the application to Cloudflare:
+## Variables d'environnement
+
+Copier `.env.example` vers `.env` et renseigner les valeurs :
+
+| Variable | Description |
+|---|---|
+| `DATABASE_URL` | URL de connexion PostgreSQL |
+| `NEXT_PUBLIC_API_URL` | URL publique de l'app |
+| `BETTER_AUTH_SECRET` | Clé secrète (`openssl rand -base64 32`) |
+| `BETTER_AUTH_URL` | URL publique de l'app |
+| `GOOGLE_CLIENT_ID` | Client ID Google OAuth |
+| `GOOGLE_CLIENT_SECRET` | Secret Google OAuth |
+
+## Commandes
 
 ```bash
-npm run deploy
-# or similar package manager command
+pnpm dev              # Serveur de développement
+pnpm build            # Build de production
+pnpm start            # Démarrer le serveur de production
+pnpm lint             # Linting ESLint
+pnpm db:generate      # Régénérer le client Prisma
+pnpm db:migrate       # Appliquer les migrations
+pnpm db:push          # Pousser le schéma (développement)
 ```
 
-## Learn More
+## Docker
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+# Démarrer app + postgres
+docker compose up -d --build
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# PostgreSQL seulement (développement local)
+docker compose up -d db
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## CI/CD
+
+- **CI** : lint automatique sur chaque PR et push (`main`/`master`)
+- **Deploy** : webhook Dokploy déclenché à chaque push sur `main`
+
+Voir `.github/workflows/` pour les détails.
