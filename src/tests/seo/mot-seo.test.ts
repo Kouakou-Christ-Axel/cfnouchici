@@ -28,7 +28,7 @@ describe("buildMotMetadata", () => {
 
   it("sets Twitter card to summary_large_image", () => {
     const meta = buildMotMetadata(mockMot);
-    expect(meta.twitter?.card).toBe("summary_large_image");
+    expect((meta.twitter as { card?: string })?.card).toBe("summary_large_image");
   });
 
   it("sets canonical URL pointing to /mots/[slug]", () => {
@@ -45,7 +45,7 @@ describe("buildMotMetadata", () => {
 
   it("sets OpenGraph type to article", () => {
     const meta = buildMotMetadata(mockMot);
-    expect(meta.openGraph?.type).toBe("article");
+    expect((meta.openGraph as { type?: string })?.type).toBe("article");
   });
 });
 

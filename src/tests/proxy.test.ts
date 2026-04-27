@@ -10,7 +10,7 @@ describe("checkRouteAccess", () => {
   it("denies unauthenticated user on /proposer", () => {
     const result = checkRouteAccess("/proposer", null);
     expect(result.allowed).toBe(false);
-    expect(result.redirect).toBe("/connexion?callbackUrl=/proposer");
+    if (!result.allowed) expect(result.redirect).toBe("/connexion?callbackUrl=/proposer");
   });
 
   it("allows MODERATEUR on /admin", () => {
@@ -26,13 +26,13 @@ describe("checkRouteAccess", () => {
   it("denies USER on /admin", () => {
     const result = checkRouteAccess("/admin", { id: "u1", role: "USER" });
     expect(result.allowed).toBe(false);
-    expect(result.redirect).toBe("/");
+    if (!result.allowed) expect(result.redirect).toBe("/");
   });
 
   it("denies unauthenticated on /admin", () => {
     const result = checkRouteAccess("/admin", null);
     expect(result.allowed).toBe(false);
-    expect(result.redirect).toBe("/connexion?callbackUrl=/admin");
+    if (!result.allowed) expect(result.redirect).toBe("/connexion?callbackUrl=/admin");
   });
 
   it("allows anyone on public routes", () => {
