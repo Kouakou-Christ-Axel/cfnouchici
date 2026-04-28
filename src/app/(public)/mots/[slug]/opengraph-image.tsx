@@ -8,7 +8,12 @@ export const size = { width: 1200, height: 630 };
 
 export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const mot = await getMotBySlug(slug);
+  let mot = null;
+  try {
+    mot = await getMotBySlug(slug);
+  } catch {
+    // DB unavailable at build time — render generic image
+  }
 
   const motLabel = mot?.mot ?? "Nouchi";
   const definition = mot?.definition
