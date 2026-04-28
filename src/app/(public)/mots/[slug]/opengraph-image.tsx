@@ -1,5 +1,4 @@
 import { ImageResponse } from "next/og";
-import { getMotBySlug } from "@/lib/queries/mots";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -10,6 +9,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
   const { slug } = await params;
   let mot = null;
   try {
+    const { getMotBySlug } = await import("@/lib/queries/mots");
     mot = await getMotBySlug(slug);
   } catch {
     // DB unavailable at build time — render generic image
