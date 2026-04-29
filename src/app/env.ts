@@ -7,13 +7,10 @@ export const env = createEnv({
     GOOGLE_CLIENT_ID: z.string().min(1),
     GOOGLE_CLIENT_SECRET: z.string().min(1),
     BETTER_AUTH_SECRET: z.string().min(1),
-    BETTER_AUTH_URL: z.string().url(),
-  },
-  client: {
-    NEXT_PUBLIC_API_URL: z.string().min(1).default("https://nouchi.ci"),
+    BETTER_AUTH_URL: z.url().default("https://nouchi.christaxel.me"),
   },
   experimental__runtimeEnv: {
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+
   },
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
   onValidationError: (issues) => {
