@@ -79,7 +79,12 @@
       "Bash(npm exec *)",
       "Bash(pnpm next *)",
       "Bash(xargs grep *)",
-      "PowerShell(pnpm install *)"
+      "PowerShell(pnpm install *)",
+      "Bash(pnpm lint *)",
+      "PowerShell(pnpm lint *)",
+      "Bash(gh run *)",
+      "Bash(rtk gh *)",
+      "Bash(echo \"EXIT: $?\")"
     ]
   },
   "enableAllProjectMcpServers": true,

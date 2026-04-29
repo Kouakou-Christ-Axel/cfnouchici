@@ -23,9 +23,11 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 ARG NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+ENV SKIP_ENV_VALIDATION=1
+ENV DATABASE_URL="postgresql://nouchici:nouchici@localhost:5432/nouchici"
 
 RUN pnpm prisma generate
-RUN SKIP_ENV_VALIDATION=true pnpm build
+RUN pnpm build
 
 # --- Runner ---
 FROM base AS runner

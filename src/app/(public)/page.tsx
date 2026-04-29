@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { db } from "@/lib/db";
 import { getPopularMots } from "@/lib/queries/mots";
 
-export const revalidate = 3600;
+export const revalidate = 0;
 
 export async function generateMetadata(): Promise<Metadata> {
   const count = await db.mot.count({ where: { statut: "VALIDE" } });
