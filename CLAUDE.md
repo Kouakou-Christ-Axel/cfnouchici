@@ -17,15 +17,14 @@ pnpm db:migrate       # Run pending migrations (production)
 pnpm db:push          # Push schema changes to DB (development)
 ```
 
-Docker:
+Local dev with Docker (optional):
 ```bash
-docker compose up -d          # Start app + postgres
-docker compose up -d --build  # Rebuild and start
+docker compose up -d          # Start postgres only
 ```
 
 ## Architecture
 
-**Framework:** Next.js 16 (App Router, Turbopack) with `output: "standalone"` for Docker deployment.
+**Framework:** Next.js 16 (App Router, Turbopack). Deployed on Vercel.
 
 **Data flow:** Currently all content (words, blog posts) is served from static TypeScript config files in `src/config/`. The database (PostgreSQL + Prisma) is set up but only wired for authentication (Better Auth). Pages use ISR with `revalidate = 3600`.
 
@@ -64,4 +63,14 @@ Validated via `@t3-oss/env-nextjs` + Zod in `src/app/env.ts`.
 
 ## Deployment
 
-Docker multi-stage build (node:22-alpine + pnpm). Docker Compose includes postgres:15-alpine with healthcheck. App runs as non-root `nextjs` user on port 3000. Target platform: Dokploy on VPS.
+**Platform:** Vercel (serverless). Push to `main` → déploiement automatique.
+
+**Base de données:** Prisma Postgres — connection pooling intégré via Prisma Accelerate, indispensable pour éviter l'épuisement des connexions en serverless. Deux URLs à configurer :
+- `DATABASE_URL` — URL `prisma://` Accelerate (utilisée par Prisma à runtime, via `@prisma/extension-accelerate`)
+- `DIRECT_URL` — URL `postgresql://` directe (utilisée pour les migrations uniquement)
+
+**Variables d'environnement à configurer dans Vercel Dashboard :**
+- `DATABASE_URL`
+- `DIRECT_URL`
+- `BETTER_AUTH_SECRET`
+- `BETTER_AUTH_URL` (URL de production)

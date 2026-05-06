@@ -84,7 +84,19 @@
       "PowerShell(pnpm lint *)",
       "Bash(gh run *)",
       "Bash(rtk gh *)",
-      "Bash(echo \"EXIT: $?\")"
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(rtk docker *)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('scripts:', list\\(d.get\\('scripts',{}\\).keys\\(\\)\\)\\); print\\('optionalDependencies:', list\\(d.get\\('optionalDependencies',{}\\).keys\\(\\)\\)\\)\")",
+      "Bash(docker build *)",
+      "PowerShell(docker run *)",
+      "WebFetch(domain:www.prisma.io)",
+      "PowerShell(pnpm add *)",
+      "mcp__claude_ai_Vercel__deploy_to_vercel",
+      "mcp__claude_ai_Vercel__list_teams",
+      "mcp__claude_ai_Vercel__list_projects",
+      "mcp__claude_ai_Vercel__get_project",
+      "mcp__claude_ai_Vercel__get_deployment_build_logs",
+      "Bash(git push *)"
     ]
   },
   "enableAllProjectMcpServers": true,
