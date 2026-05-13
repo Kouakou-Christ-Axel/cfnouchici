@@ -135,6 +135,7 @@ model Mot {
   valideParId   String?
   validePar     User?      @relation("ValidePar", fields: [valideParId], references: [id])
 
+  sens           Sens[]
   exemples       Exemple[]
   logsModeration LogModeration[]
   votes          VoteMot[]
@@ -151,12 +152,28 @@ model Mot {
 }
 
 model Exemple {
-  id        String @id @default(cuid())
-  phrase    String
-  motId     String
-  mot       Mot    @relation(fields: [motId], references: [id], onDelete: Cascade)
+  id      String  @id @default(cuid())
+  phrase  String
+  motId   String
+  mot     Mot     @relation(fields: [motId], references: [id], onDelete: Cascade)
+  sensId  String?
+  sens    Sens?   @relation(fields: [sensId], references: [id], onDelete: Cascade)
 
   @@map("exemple")
+}
+
+model Sens {
+  id          String     @id @default(cuid())
+  motId       String
+  mot         Mot        @relation(fields: [motId], references: [id], onDelete: Cascade)
+  categorie   Categorie
+  definition  String
+  traductions String[]
+  ordre       Int        @default(0)
+  exemples    Exemple[]
+  createdAt   DateTime   @default(now())
+
+  @@map("sens")
 }
 
 model LogModeration {
