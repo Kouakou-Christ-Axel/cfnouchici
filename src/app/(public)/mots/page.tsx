@@ -12,12 +12,16 @@ import { Card, CardContent } from "@/components/ui/card";
 import { BookOpen, Plus } from "lucide-react";
 import { WordGroup } from "@/components/public/mots/word-group";
 import { ScrollToTop } from "@/components/ui/scroll-to-top";
+import { BASE_URL } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Tous les mots | nouchi.ci",
   description: "Explore le dictionnaire complet du nouchi ivoirien.",
+  alternates: {
+    canonical: `${BASE_URL}/mots`,
+  },
 };
 
 interface PageProps {

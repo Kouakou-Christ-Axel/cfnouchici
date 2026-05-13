@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "https://www.nouchi.ci";
+export const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "https://www.nouchi.ci";
 const SITE_NAME = "nouchi.ci";
 
 interface MotForSeo {

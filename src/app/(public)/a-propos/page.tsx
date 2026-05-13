@@ -1,18 +1,19 @@
 import type { Metadata } from "next";
 import { Separator } from "@/components/ui/separator";
+import { BASE_URL } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "À propos | nouchi.ci",
   description:
     "nouchi.ci est le dictionnaire collaboratif du nouchi, l'argot urbain de Côte d'Ivoire. Découvrez notre mission et comment contribuer.",
   alternates: {
-    canonical: `${process.env.NEXT_PUBLIC_API_URL ?? "https://www.nouchi.ci"}/a-propos`,
+    canonical: `${BASE_URL}/a-propos`,
   },
   openGraph: {
     title: "À propos de nouchi.ci",
     description:
       "nouchi.ci est le dictionnaire collaboratif du nouchi, l'argot urbain de Côte d'Ivoire.",
-    url: `${process.env.NEXT_PUBLIC_API_URL ?? "https://www.nouchi.ci"}/a-propos`,
+    url: `${BASE_URL}/a-propos`,
     type: "website",
   },
 };
