@@ -5,14 +5,26 @@ import { searchMots } from "@/lib/queries/search";
 describe("searchMots", () => {
   beforeEach(async () => {
     await db.exemple.deleteMany();
+    await db.sens.deleteMany();
     await db.mot.deleteMany();
 
-    await db.mot.createMany({
-      data: [
-        { slug: "goumin", mot: "Goumin", definition: "Se battre, se disputer", statut: "VALIDE", categorie: "VERBE" },
-        { slug: "choco", mot: "Choco", definition: "Ami proche, meilleur ami", statut: "VALIDE", categorie: "NOM" },
-        { slug: "brouteur", mot: "Brouteur", definition: "Arnaqueur sur internet", statut: "EN_ATTENTE", categorie: "NOM" },
-      ],
+    await db.mot.create({
+      data: {
+        slug: "goumin", mot: "Goumin", statut: "VALIDE",
+        sens: { create: [{ categorie: "VERBE", definition: "Se battre, se disputer", traductions: [], ordre: 0 }] },
+      },
+    });
+    await db.mot.create({
+      data: {
+        slug: "choco", mot: "Choco", statut: "VALIDE",
+        sens: { create: [{ categorie: "NOM", definition: "Ami proche, meilleur ami", traductions: [], ordre: 0 }] },
+      },
+    });
+    await db.mot.create({
+      data: {
+        slug: "brouteur", mot: "Brouteur", statut: "EN_ATTENTE",
+        sens: { create: [{ categorie: "NOM", definition: "Arnaqueur sur internet", traductions: [], ordre: 0 }] },
+      },
     });
   });
 

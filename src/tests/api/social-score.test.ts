@@ -10,7 +10,7 @@ describe("updateSocialScore", () => {
     await db.exemple.deleteMany();
     await db.mot.deleteMany();
     const mot = await db.mot.create({
-      data: { slug: "social-test", mot: "SocialTest", definition: "def", statut: "EN_ATTENTE" },
+      data: { slug: "social-test", mot: "SocialTest", statut: "EN_ATTENTE" },
     });
     slug = mot.slug;
   });

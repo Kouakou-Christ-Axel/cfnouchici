@@ -27,7 +27,7 @@ describe("listLogs", () => {
     await db.exemple.deleteMany();
     await db.mot.deleteMany();
     const mot = await db.mot.create({
-      data: { slug: "log-test", mot: "LogTest", definition: "d", statut: "EN_ATTENTE" },
+      data: { slug: "log-test", mot: "LogTest", statut: "EN_ATTENTE" },
     });
     motId = mot.id;
   });

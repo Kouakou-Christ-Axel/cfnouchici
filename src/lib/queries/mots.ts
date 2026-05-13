@@ -9,6 +9,11 @@ interface ListMotsParams {
   categorie?: Categorie;
 }
 
+const sensInclude = {
+  orderBy: { ordre: "asc" as const },
+  include: { exemples: true },
+};
+
 export async function listMotsValides({
   cursor,
   limit = 20,
@@ -23,19 +28,19 @@ export async function listMotsValides({
   }
 
   if (categorie) {
-    where.categorie = categorie;
+    where.sens = { some: { categorie } };
   }
 
   if (search) {
     where.OR = [
       { mot: { search } },
-      { definition: { search } },
+      { sens: { some: { definition: { search } } } },
     ];
   }
 
   const mots = await db.mot.findMany({
     where,
-    include: { exemples: true, soumisPar: { select: { id: true, name: true, image: true } } },
+    include: { sens: sensInclude, soumisPar: { select: { id: true, name: true, image: true } } },
     orderBy: { mot: "asc" },
     take: limit + 1,
     ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
@@ -51,14 +56,14 @@ export async function listMotsValides({
 export async function getMotBySlug(slug: string) {
   return db.mot.findUnique({
     where: { slug },
-    include: { exemples: true, soumisPar: { select: { id: true, name: true, image: true } } },
+    include: { sens: sensInclude, soumisPar: { select: { id: true, name: true, image: true } } },
   });
 }
 
 export async function listAllMotsValides() {
   return db.mot.findMany({
     where: { statut: "VALIDE" },
-    include: { exemples: true, soumisPar: { select: { id: true, name: true, image: true } } },
+    include: { sens: sensInclude, soumisPar: { select: { id: true, name: true, image: true } } },
     orderBy: { mot: "asc" },
   });
 }
@@ -69,7 +74,7 @@ export async function listMotsValidesByLettre(lettre: string) {
       statut: "VALIDE",
       mot: { startsWith: lettre, mode: "insensitive" },
     },
-    include: { exemples: true, soumisPar: { select: { id: true, name: true, image: true } } },
+    include: { sens: sensInclude, soumisPar: { select: { id: true, name: true, image: true } } },
     orderBy: { mot: "asc" },
   });
 }
@@ -77,7 +82,7 @@ export async function listMotsValidesByLettre(lettre: string) {
 export async function getPopularMots(limit = 6) {
   return db.mot.findMany({
     where: { statut: "VALIDE" },
-    include: { exemples: true, soumisPar: { select: { id: true, name: true, image: true } } },
+    include: { sens: sensInclude, soumisPar: { select: { id: true, name: true, image: true } } },
     orderBy: { createdAt: "asc" },
     take: limit,
   });
@@ -86,7 +91,7 @@ export async function getPopularMots(limit = 6) {
 export async function getRecentMots(limit = 6) {
   return db.mot.findMany({
     where: { statut: "VALIDE" },
-    include: { exemples: true, soumisPar: { select: { id: true, name: true, image: true } } },
+    include: { sens: sensInclude, soumisPar: { select: { id: true, name: true, image: true } } },
     orderBy: { createdAt: "desc" },
     take: limit,
   });

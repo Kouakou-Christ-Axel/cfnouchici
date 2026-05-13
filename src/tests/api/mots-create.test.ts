@@ -31,7 +31,7 @@ describe("createMot", () => {
     expect(mot.statut).toBe("EN_ATTENTE");
     expect(mot.slug).toBe("dja");
     expect(mot.soumisParId).toBe(userId);
-    expect(mot.exemples).toHaveLength(1);
+    expect(mot.sens[0].exemples).toHaveLength(1);
   });
 
   it("generates a slug automatically", async () => {

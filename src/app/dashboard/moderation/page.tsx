@@ -8,10 +8,16 @@ export const dynamic = "force-dynamic";
 export default async function ModerationPage() {
   await getSessionOrRedirect("/dashboard/moderation", "MODERATEUR");
 
-  const [stats, { data: pendingMots }] = await Promise.all([
+  const [stats, { data: rawPendingMots }] = await Promise.all([
     getAdminStats(),
     listAllMots({ statut: "EN_ATTENTE", sort: "popularity", limit: 50 }),
   ]);
+
+  const pendingMots = rawPendingMots.map((m) => ({
+    ...m,
+    definition: m.sens[0]?.definition ?? "",
+    categorie: m.sens[0]?.categorie ?? null,
+  }));
 
   const validatedThisWeek = stats.actionsThisWeek;
   const acceptanceRate =
@@ -37,7 +43,7 @@ export default async function ModerationPage() {
         <StatCard label="Taux d'acceptation" value={`${acceptanceRate}%`} helper={`${validatedThisWeek} actions cette semaine`} />
       </div>
 
-      <PendingList mots={pendingMots as never} />
+      <PendingList mots={pendingMots} />
     </div>
   );
 }

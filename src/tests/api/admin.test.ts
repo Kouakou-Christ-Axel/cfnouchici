@@ -31,9 +31,9 @@ describe("admin queries and mutations", () => {
     it("returns all mots regardless of statut", async () => {
       await db.mot.createMany({
         data: [
-          { slug: "a", mot: "A", definition: "def", statut: "VALIDE" },
-          { slug: "b", mot: "B", definition: "def", statut: "EN_ATTENTE" },
-          { slug: "c", mot: "C", definition: "def", statut: "REJETE" },
+          { slug: "a", mot: "A", statut: "VALIDE" },
+          { slug: "b", mot: "B", statut: "EN_ATTENTE" },
+          { slug: "c", mot: "C", statut: "REJETE" },
         ],
       });
       const result = await listAllMots({});
@@ -43,8 +43,8 @@ describe("admin queries and mutations", () => {
     it("filters by statut", async () => {
       await db.mot.createMany({
         data: [
-          { slug: "a", mot: "A", definition: "def", statut: "EN_ATTENTE" },
-          { slug: "b", mot: "B", definition: "def", statut: "VALIDE" },
+          { slug: "a", mot: "A", statut: "EN_ATTENTE" },
+          { slug: "b", mot: "B", statut: "VALIDE" },
         ],
       });
       const result = await listAllMots({ statut: "EN_ATTENTE" });
@@ -55,9 +55,9 @@ describe("admin queries and mutations", () => {
     it("sorts by popularity when sort=popularity", async () => {
       await db.mot.createMany({
         data: [
-          { slug: "low", mot: "Low", definition: "d", statut: "EN_ATTENTE", popularityScore: 1 },
-          { slug: "high", mot: "High", definition: "d", statut: "EN_ATTENTE", popularityScore: 100 },
-          { slug: "mid", mot: "Mid", definition: "d", statut: "EN_ATTENTE", popularityScore: 50 },
+          { slug: "low", mot: "Low", statut: "EN_ATTENTE", popularityScore: 1 },
+          { slug: "high", mot: "High", statut: "EN_ATTENTE", popularityScore: 100 },
+          { slug: "mid", mot: "Mid", statut: "EN_ATTENTE", popularityScore: 50 },
         ],
       });
       const result = await listAllMots({ statut: "EN_ATTENTE", sort: "popularity" });
@@ -68,8 +68,8 @@ describe("admin queries and mutations", () => {
     it("supports pagination", async () => {
       await db.mot.createMany({
         data: [
-          { slug: "a", mot: "A", definition: "def", statut: "EN_ATTENTE" },
-          { slug: "b", mot: "B", definition: "def", statut: "EN_ATTENTE" },
+          { slug: "a", mot: "A", statut: "EN_ATTENTE" },
+          { slug: "b", mot: "B", statut: "EN_ATTENTE" },
         ],
       });
       const first = await listAllMots({ limit: 1 });
@@ -80,7 +80,7 @@ describe("admin queries and mutations", () => {
 
   describe("validerMot", () => {
     it("changes statut to VALIDE and creates log", async () => {
-      await db.mot.create({ data: { slug: "test", mot: "Test", definition: "def", statut: "EN_ATTENTE" } });
+      await db.mot.create({ data: { slug: "test", mot: "Test", statut: "EN_ATTENTE" } });
       const result = await validerMot("test", modId);
       expect(result.statut).toBe("VALIDE");
       expect(result.valideParId).toBe(modId);
@@ -94,7 +94,7 @@ describe("admin queries and mutations", () => {
 
   describe("rejeterMot", () => {
     it("changes statut to REJETE with motif and creates log", async () => {
-      await db.mot.create({ data: { slug: "rej", mot: "Rej", definition: "def", statut: "EN_ATTENTE" } });
+      await db.mot.create({ data: { slug: "rej", mot: "Rej", statut: "EN_ATTENTE" } });
       const result = await rejeterMot("rej", modId, "Définition incorrecte");
       expect(result.statut).toBe("REJETE");
       expect(result.motifRejet).toBe("Définition incorrecte");
@@ -108,9 +108,14 @@ describe("admin queries and mutations", () => {
 
   describe("editerMotAdmin", () => {
     it("updates fields and creates EDITE log", async () => {
-      await db.mot.create({ data: { slug: "edit", mot: "Edit", definition: "old", statut: "EN_ATTENTE" } });
+      await db.mot.create({
+        data: {
+          slug: "edit", mot: "Edit", statut: "EN_ATTENTE",
+          sens: { create: [{ categorie: "NOM", definition: "old", traductions: [], ordre: 0 }] },
+        },
+      });
       const result = await editerMotAdmin("edit", { definition: "new definition" }, modId);
-      expect(result!.definition).toBe("new definition");
+      expect(result!.sens[0]?.definition).toBe("new definition");
 
       const logs = await db.logModeration.findMany({ where: { motId: result!.id } });
       expect(logs).toHaveLength(1);
@@ -120,7 +125,7 @@ describe("admin queries and mutations", () => {
 
   describe("getMotStats", () => {
     it("returns vote aggregation for a mot", async () => {
-      const mot = await db.mot.create({ data: { slug: "stats", mot: "Stats", definition: "def", statut: "VALIDE" } });
+      const mot = await db.mot.create({ data: { slug: "stats", mot: "Stats", statut: "VALIDE" } });
       await db.voteMot.createMany({
         data: [
           { motId: mot.id, userId: userId, connaissance: "OUI_UTILISE", exactitude: "EXACTE" },
@@ -139,9 +144,9 @@ describe("admin queries and mutations", () => {
     it("returns counts by statut", async () => {
       await db.mot.createMany({
         data: [
-          { slug: "a", mot: "A", definition: "def", statut: "EN_ATTENTE" },
-          { slug: "b", mot: "B", definition: "def", statut: "EN_ATTENTE" },
-          { slug: "c", mot: "C", definition: "def", statut: "VALIDE" },
+          { slug: "a", mot: "A", statut: "EN_ATTENTE" },
+          { slug: "b", mot: "B", statut: "EN_ATTENTE" },
+          { slug: "c", mot: "C", statut: "VALIDE" },
         ],
       });
       const stats = await getAdminStats();

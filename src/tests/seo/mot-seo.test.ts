@@ -4,8 +4,7 @@ import { buildMotMetadata, buildMotJsonLd } from "@/lib/seo";
 const mockMot = {
   slug: "goumin",
   mot: "Goumin",
-  definition: "Se battre, se disputer entre personnes",
-  categorie: "VERBE" as const,
+  sens: [{ definition: "Se battre, se disputer entre personnes", categorie: "VERBE" as const }],
   updatedAt: new Date("2026-01-15"),
 };
 

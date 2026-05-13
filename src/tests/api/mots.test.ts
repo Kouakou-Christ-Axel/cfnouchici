@@ -5,14 +5,26 @@ import { listMotsValides, getMotBySlug } from "@/lib/queries/mots";
 describe("listMotsValides", () => {
   beforeEach(async () => {
     await db.exemple.deleteMany();
+    await db.sens.deleteMany();
     await db.mot.deleteMany();
 
-    await db.mot.createMany({
-      data: [
-        { slug: "goumin", mot: "Goumin", definition: "Se battre", statut: "VALIDE", categorie: "VERBE" },
-        { slug: "choco", mot: "Choco", definition: "Ami proche", statut: "VALIDE", categorie: "NOM" },
-        { slug: "brouteur", mot: "Brouteur", definition: "Arnaqueur", statut: "EN_ATTENTE", categorie: "NOM" },
-      ],
+    await db.mot.create({
+      data: {
+        slug: "goumin", mot: "Goumin", statut: "VALIDE",
+        sens: { create: [{ categorie: "VERBE", definition: "Se battre", traductions: [], ordre: 0 }] },
+      },
+    });
+    await db.mot.create({
+      data: {
+        slug: "choco", mot: "Choco", statut: "VALIDE",
+        sens: { create: [{ categorie: "NOM", definition: "Ami proche", traductions: [], ordre: 0 }] },
+      },
+    });
+    await db.mot.create({
+      data: {
+        slug: "brouteur", mot: "Brouteur", statut: "EN_ATTENTE",
+        sens: { create: [{ categorie: "NOM", definition: "Arnaqueur", traductions: [], ordre: 0 }] },
+      },
     });
   });
 
@@ -48,18 +60,26 @@ describe("listMotsValides", () => {
 describe("getMotBySlug", () => {
   beforeEach(async () => {
     await db.exemple.deleteMany();
+    await db.sens.deleteMany();
     await db.mot.deleteMany();
   });
 
   it("returns a word with exemples", async () => {
-    const mot = await db.mot.create({
-      data: { slug: "goumin", mot: "Goumin", definition: "Se battre", statut: "VALIDE", categorie: "VERBE" },
+    await db.mot.create({
+      data: {
+        slug: "goumin", mot: "Goumin", statut: "VALIDE",
+        sens: {
+          create: [{
+            categorie: "VERBE", definition: "Se battre", traductions: [], ordre: 0,
+            exemples: { create: [{ phrase: "On va goumin!" }] },
+          }],
+        },
+      },
     });
-    await db.exemple.create({ data: { phrase: "On va goumin!", motId: mot.id } });
 
     const result = await getMotBySlug("goumin");
     expect(result).not.toBeNull();
-    expect(result!.exemples.length).toBeGreaterThanOrEqual(1);
+    expect(result!.sens[0].exemples.length).toBeGreaterThanOrEqual(1);
   });
 
   it("returns null for unknown slug", async () => {

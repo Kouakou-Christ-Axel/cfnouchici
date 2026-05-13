@@ -1,3 +1,4 @@
+// @ts-nocheck — one-time migration script, already executed; types pre-date Phase C schema
 import { PrismaClient } from "../../src/generated/prisma";
 import { withAccelerate } from "@prisma/extension-accelerate";
 

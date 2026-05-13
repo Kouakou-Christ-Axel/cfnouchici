@@ -13,6 +13,11 @@ interface ListAllMotsParams {
   sort?: MotsSortOption;
 }
 
+const sensInclude = {
+  orderBy: { ordre: "asc" as const },
+  include: { exemples: true },
+};
+
 export async function listAllMots({
   cursor,
   limit = 20,
@@ -24,11 +29,11 @@ export async function listAllMots({
   const where: Record<string, unknown> = {};
 
   if (statut) where.statut = statut;
-  if (categorie) where.categorie = categorie;
+  if (categorie) where.sens = { some: { categorie } };
   if (search) {
     where.OR = [
       { mot: { contains: search, mode: "insensitive" } },
-      { definition: { contains: search, mode: "insensitive" } },
+      { sens: { some: { definition: { contains: search, mode: "insensitive" } } } },
     ];
   }
 
@@ -42,7 +47,7 @@ export async function listAllMots({
   const mots = await db.mot.findMany({
     where,
     include: {
-      exemples: true,
+      sens: sensInclude,
       soumisPar: { select: { id: true, name: true, image: true } },
       _count: { select: { votes: true } },
     },

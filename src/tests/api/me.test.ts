@@ -32,10 +32,10 @@ describe("me queries/mutations", () => {
     it("counts propositions by status", async () => {
       await db.mot.createMany({
         data: [
-          { slug: "a", mot: "A", definition: "def", statut: "VALIDE", soumisParId: userId },
-          { slug: "b", mot: "B", definition: "def", statut: "VALIDE", soumisParId: userId },
-          { slug: "c", mot: "C", definition: "def", statut: "EN_ATTENTE", soumisParId: userId },
-          { slug: "d", mot: "D", definition: "def", statut: "REJETE", soumisParId: userId },
+          { slug: "a", mot: "A", statut: "VALIDE", soumisParId: userId },
+          { slug: "b", mot: "B", statut: "VALIDE", soumisParId: userId },
+          { slug: "c", mot: "C", statut: "EN_ATTENTE", soumisParId: userId },
+          { slug: "d", mot: "D", statut: "REJETE", soumisParId: userId },
         ],
       });
       const stats = await getMyStats(userId);
@@ -50,7 +50,6 @@ describe("me queries/mutations", () => {
         data: Array.from({ length: 7 }).map((_, i) => ({
           slug: `slug-${i}`,
           mot: `Mot${i}`,
-          definition: "def",
           statut: "EN_ATTENTE" as const,
           soumisParId: userId,
         })),
@@ -64,9 +63,9 @@ describe("me queries/mutations", () => {
     beforeEach(async () => {
       await db.mot.createMany({
         data: [
-          { slug: "a", mot: "A", definition: "def", statut: "VALIDE", soumisParId: userId },
-          { slug: "b", mot: "B", definition: "def", statut: "EN_ATTENTE", soumisParId: userId },
-          { slug: "c", mot: "C", definition: "def", statut: "REJETE", soumisParId: userId },
+          { slug: "a", mot: "A", statut: "VALIDE", soumisParId: userId },
+          { slug: "b", mot: "B", statut: "EN_ATTENTE", soumisParId: userId },
+          { slug: "c", mot: "C", statut: "REJETE", soumisParId: userId },
         ],
       });
     });
@@ -91,7 +90,7 @@ describe("me queries/mutations", () => {
   describe("deleteMyProposition", () => {
     it("deletes the user's own EN_ATTENTE word", async () => {
       await db.mot.create({
-        data: { slug: "tokill", mot: "ToKill", definition: "def", statut: "EN_ATTENTE", soumisParId: userId },
+        data: { slug: "tokill", mot: "ToKill", statut: "EN_ATTENTE", soumisParId: userId },
       });
       await deleteMyProposition(userId, "tokill");
       const found = await db.mot.findUnique({ where: { slug: "tokill" } });
@@ -100,14 +99,14 @@ describe("me queries/mutations", () => {
 
     it("throws if the mot does not belong to the user", async () => {
       await db.mot.create({
-        data: { slug: "notmine", mot: "NotMine", definition: "def", statut: "EN_ATTENTE" },
+        data: { slug: "notmine", mot: "NotMine", statut: "EN_ATTENTE" },
       });
       await expect(deleteMyProposition(userId, "notmine")).rejects.toThrow();
     });
 
     it("throws if the mot is already validated", async () => {
       await db.mot.create({
-        data: { slug: "valid", mot: "Valid", definition: "def", statut: "VALIDE", soumisParId: userId },
+        data: { slug: "valid", mot: "Valid", statut: "VALIDE", soumisParId: userId },
       });
       await expect(deleteMyProposition(userId, "valid")).rejects.toThrow();
     });

@@ -27,7 +27,7 @@ describe("votes", () => {
     await db.exemple.deleteMany();
     await db.mot.deleteMany();
     const mot = await db.mot.create({
-      data: { slug: "votetest", mot: "VoteTest", definition: "def", statut: "VALIDE" },
+      data: { slug: "votetest", mot: "VoteTest", statut: "VALIDE" },
     });
     motId = mot.id;
   });

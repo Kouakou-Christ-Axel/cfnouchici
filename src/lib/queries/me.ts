@@ -9,7 +9,7 @@ interface ListMyPropositionsParams {
 }
 
 export async function getMyStats(userId: string) {
-  const [total, validated, pending, rejected, oldestPending, recentPropositions] = await Promise.all([
+  const [total, validated, pending, rejected, oldestPending, rawPropositions] = await Promise.all([
     db.mot.count({ where: { soumisParId: userId } }),
     db.mot.count({ where: { soumisParId: userId, statut: "VALIDE" } }),
     db.mot.count({ where: { soumisParId: userId, statut: "EN_ATTENTE" } }),
@@ -27,13 +27,24 @@ export async function getMyStats(userId: string) {
         id: true,
         slug: true,
         mot: true,
-        definition: true,
-        categorie: true,
         statut: true,
         createdAt: true,
+        sens: {
+          select: { definition: true },
+          orderBy: { ordre: "asc" },
+          take: 1,
+        },
       },
     }),
   ]);
+
+  const recentPropositions = rawPropositions.map((p) => ({
+    id: p.id,
+    slug: p.slug,
+    mot: p.mot,
+    statut: p.statut,
+    definition: p.sens[0]?.definition ?? "",
+  }));
 
   return {
     total,
@@ -53,7 +64,7 @@ export async function listMyPropositions(userId: string, params: ListMyPropositi
   if (search) {
     where.OR = [
       { mot: { contains: search, mode: "insensitive" } },
-      { definition: { contains: search, mode: "insensitive" } },
+      { sens: { some: { definition: { contains: search, mode: "insensitive" } } } },
     ];
   }
 
@@ -61,6 +72,9 @@ export async function listMyPropositions(userId: string, params: ListMyPropositi
     where,
     orderBy: { createdAt: "desc" },
     take: limit + 1,
+    include: {
+      sens: { select: { categorie: true }, orderBy: { ordre: "asc" }, take: 1 },
+    },
     ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
   });
 

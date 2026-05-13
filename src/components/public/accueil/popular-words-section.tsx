@@ -2,11 +2,15 @@ import Link from "next/link";
 import type { Categorie } from "@/generated/prisma";
 import { WordCard } from "@/components/public/accueil/word-card";
 
+interface SensSummary {
+  definition: string;
+  categorie: Categorie | null;
+}
+
 interface MotSummary {
   slug: string;
   mot: string;
-  definition: string | null;
-  categorie: Categorie | null;
+  sens: SensSummary[];
   soumisPar: { name: string } | null;
 }
 
@@ -36,8 +40,8 @@ function PopularWordsSection({ mots }: PopularWordsSectionProps) {
               key={mot.slug}
               slug={mot.slug}
               mot={mot.mot}
-              definition={mot.definition ?? ""}
-              categorie={mot.categorie}
+              definition={mot.sens[0]?.definition ?? ""}
+              categorie={mot.sens[0]?.categorie ?? null}
               authorName={mot.soumisPar?.name ?? null}
             />
           ))}

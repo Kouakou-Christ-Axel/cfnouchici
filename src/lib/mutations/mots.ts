@@ -2,6 +2,11 @@ import { db } from "@/lib/db";
 import { generateSlug } from "@/lib/slug";
 import type { CreateMotInput, UpdateMotInput } from "@/lib/validators/mot";
 
+const sensInclude = {
+  orderBy: { ordre: "asc" as const },
+  include: { exemples: true },
+};
+
 export async function createMot(input: CreateMotInput, userId: string | null) {
   const slug = generateSlug(input.mot);
 
@@ -14,41 +19,69 @@ export async function createMot(input: CreateMotInput, userId: string | null) {
     data: {
       slug,
       mot: input.mot,
-      definition: input.definition,
-      categorie: input.categorie ?? null,
       statut: "EN_ATTENTE",
       soumisParId: userId,
-      exemples: {
-        create: (input.exemples ?? []).map((phrase) => ({ phrase })),
+      sens: {
+        create: [
+          {
+            categorie: input.categorie ?? "NOM",
+            definition: input.definition,
+            traductions: [],
+            ordre: 0,
+            exemples: {
+              create: (input.exemples ?? []).filter(Boolean).map((phrase) => ({ phrase })),
+            },
+          },
+        ],
       },
     },
-    include: { exemples: true },
+    include: { sens: sensInclude },
   });
 }
 
 export async function updateMot(slug: string, input: UpdateMotInput) {
-  const data: Record<string, unknown> = {};
+  const motData: Record<string, unknown> = {};
   if (input.mot !== undefined) {
-    data.mot = input.mot;
-    data.slug = generateSlug(input.mot);
+    motData.mot = input.mot;
+    motData.slug = generateSlug(input.mot);
   }
-  if (input.definition !== undefined) data.definition = input.definition;
-  if (input.categorie !== undefined) data.categorie = input.categorie;
 
   const mot = await db.mot.update({
     where: { slug },
-    data,
-    include: { exemples: true },
+    data: motData,
+    include: { sens: sensInclude },
   });
 
-  if (input.exemples !== undefined) {
-    await db.exemple.deleteMany({ where: { motId: mot.id } });
-    await db.exemple.createMany({
-      data: input.exemples.map((phrase) => ({ phrase, motId: mot.id })),
-    });
+  const needsSensUpdate =
+    input.definition !== undefined ||
+    input.categorie !== undefined ||
+    input.exemples !== undefined;
+
+  if (needsSensUpdate) {
+    const firstSens = mot.sens[0];
+    if (firstSens) {
+      await db.sens.update({
+        where: { id: firstSens.id },
+        data: {
+          ...(input.definition !== undefined ? { definition: input.definition } : {}),
+          ...(input.categorie !== undefined ? { categorie: input.categorie } : {}),
+        },
+      });
+      if (input.exemples !== undefined) {
+        await db.exemple.deleteMany({ where: { sensId: firstSens.id } });
+        if (input.exemples.length > 0) {
+          await db.exemple.createMany({
+            data: input.exemples.filter(Boolean).map((phrase) => ({ phrase, sensId: firstSens.id })),
+          });
+        }
+      }
+    }
   }
 
-  return db.mot.findUnique({ where: { id: mot.id }, include: { exemples: true } });
+  return db.mot.findUnique({
+    where: { id: mot.id },
+    include: { sens: sensInclude },
+  });
 }
 
 export async function deleteMot(slug: string) {

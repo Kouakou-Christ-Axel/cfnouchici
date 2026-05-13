@@ -133,7 +133,7 @@ export default async function MotsListPage({ searchParams }: PageProps) {
           <div className="grid grid-cols-3 gap-4">
             {[
               { label: "Mots", value: mots.length },
-              { label: "Catégories", value: new Set(mots.map((m) => m.categorie)).size },
+              { label: "Catégories", value: new Set(mots.map((m) => m.sens[0]?.categorie)).size },
               { label: "Contributeurs", value: contributeurs },
             ].map(({ label, value }) => (
               <Card key={label} className="py-4">

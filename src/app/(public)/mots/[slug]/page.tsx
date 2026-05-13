@@ -50,13 +50,16 @@ export default async function MotDetailPage({
 	const mot = await getMotBySlug(slug);
 	if (!mot || mot.statut !== "VALIDE") notFound();
 
+	const primarySens = mot.sens[0];
 	const letter = mot.mot[0].toUpperCase();
+
 	const related = await db.mot.findMany({
 		where: {
 			statut: "VALIDE",
-			categorie: mot.categorie ?? undefined,
 			slug: { not: slug },
+			sens: { some: { categorie: primarySens?.categorie ?? undefined } },
 		},
+		include: { sens: { orderBy: { ordre: "asc" }, take: 1 } },
 		take: 3,
 	});
 
@@ -98,8 +101,8 @@ export default async function MotDetailPage({
 					{/* Mot + catégorie */}
 					<header className="space-y-4">
 						<div className="flex items-center justify-between gap-3">
-							<span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${categoryColor(mot.categorie)}`}>
-								{categoryLabel(mot.categorie)}
+							<span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${categoryColor(primarySens?.categorie)}`}>
+								{categoryLabel(primarySens?.categorie)}
 							</span>
 							<ShareButton mot={mot.mot} slug={slug} size="sm" variant="outline" />
 						</div>
@@ -110,26 +113,31 @@ export default async function MotDetailPage({
 
 					<Separator />
 
-					{/* Définition */}
-					<div className="space-y-2">
-						<span className="text-xs font-medium text-muted-foreground uppercase tracking-widest">
-							Définition
-						</span>
-						<p className="text-lg leading-relaxed">{mot.definition}</p>
-					</div>
+					{/* Définition(s) */}
+					{mot.sens.map((sens, index) => (
+						<div key={sens.id} className="space-y-4">
+							<div className="space-y-2">
+								<span className="text-xs font-medium text-muted-foreground uppercase tracking-widest">
+									{mot.sens.length > 1 ? `Sens ${index + 1}` : "Définition"}
+								</span>
+								<p className="text-lg leading-relaxed">{sens.definition}</p>
+							</div>
 
-					{/* Exemple */}
-					{mot.exemples.length > 0 && (
-						<div className="space-y-2">
-							<span className="text-xs font-medium text-muted-foreground uppercase tracking-widest">
-								Exemple
-							</span>
-							<blockquote className="flex items-start gap-3 border-l-2 border-foreground/20 pl-4">
-								<Quote className="size-4 text-muted-foreground/40 shrink-0 mt-1" />
-								<p className="italic text-muted-foreground">{mot.exemples[0].phrase}</p>
-							</blockquote>
+							{sens.exemples.length > 0 && (
+								<div className="space-y-2">
+									<span className="text-xs font-medium text-muted-foreground uppercase tracking-widest">
+										Exemple
+									</span>
+									<blockquote className="flex items-start gap-3 border-l-2 border-foreground/20 pl-4">
+										<Quote className="size-4 text-muted-foreground/40 shrink-0 mt-1" />
+										<p className="italic text-muted-foreground">{sens.exemples[0].phrase}</p>
+									</blockquote>
+								</div>
+							)}
+
+							{index < mot.sens.length - 1 && <Separator />}
 						</div>
-					)}
+					))}
 
 					<Separator />
 
@@ -165,7 +173,7 @@ export default async function MotDetailPage({
 							</div>
 							<div className="flex items-center gap-3">
 								<Badge variant="secondary" className="text-xs">
-									{categoryLabel(mot.categorie)}
+									{categoryLabel(primarySens?.categorie)}
 								</Badge>
 							</div>
 						</CardContent>
@@ -189,7 +197,7 @@ export default async function MotDetailPage({
 												{w.mot}
 											</p>
 											<p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">
-												{w.definition}
+												{w.sens[0]?.definition ?? ""}
 											</p>
 										</div>
 										<ArrowLeft className="size-3.5 rotate-180 text-muted-foreground shrink-0 ml-2 opacity-0 group-hover:opacity-100 transition-opacity" />

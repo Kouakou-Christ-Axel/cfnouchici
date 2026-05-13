@@ -33,7 +33,6 @@ describe("generateSitemapEntries", () => {
       data: {
         slug: "test-mot",
         mot: "Test",
-        definition: "Définition test",
         statut: "VALIDE",
       },
     });
@@ -48,7 +47,6 @@ describe("generateSitemapEntries", () => {
       data: {
         slug: "pending-mot",
         mot: "Pending",
-        definition: "Définition en attente",
         statut: "EN_ATTENTE",
       },
     });
@@ -62,7 +60,6 @@ describe("generateSitemapEntries", () => {
       data: {
         slug: "dated-mot",
         mot: "Dated",
-        definition: "Définition datée",
         statut: "VALIDE",
         updatedAt: fixedDate,
       },

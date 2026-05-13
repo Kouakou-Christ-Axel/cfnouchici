@@ -30,7 +30,13 @@ export default async function ModerationSlugPage({ params }: PageProps) {
     }),
   ]);
 
-  const serializedMot = JSON.parse(JSON.stringify(mot));
+  const primarySens = mot.sens[0];
+  const serializedMot = {
+    ...JSON.parse(JSON.stringify(mot)),
+    definition: primarySens?.definition ?? "",
+    categorie: primarySens?.categorie ?? null,
+    exemples: (primarySens?.exemples ?? []).map((e) => ({ id: e.id, contenu: e.phrase })),
+  };
   const serializedLogs = JSON.parse(JSON.stringify(rawLogs));
 
   return (

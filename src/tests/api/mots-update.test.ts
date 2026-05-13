@@ -22,7 +22,7 @@ describe("updateMot", () => {
   it("updates definition", async () => {
     const created = await createMot({ mot: "updatetest", definition: "Old", exemples: [] }, userId);
     const updated = await updateMot(created.slug, { definition: "New definition" });
-    expect(updated!.definition).toBe("New definition");
+    expect(updated!.sens[0]?.definition).toBe("New definition");
   });
 
   it("updates exemples by replacing them", async () => {
@@ -31,8 +31,8 @@ describe("updateMot", () => {
       userId
     );
     const updated = await updateMot(created.slug, { exemples: ["New example 1", "New example 2"] });
-    expect(updated!.exemples).toHaveLength(2);
-    expect(updated!.exemples[0].phrase).toBe("New example 1");
+    expect(updated!.sens[0]?.exemples).toHaveLength(2);
+    expect(updated!.sens[0]?.exemples[0].phrase).toBe("New example 1");
   });
 
   it("updates slug when mot changes", async () => {

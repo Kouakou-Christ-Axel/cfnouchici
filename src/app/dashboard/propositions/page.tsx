@@ -16,7 +16,12 @@ export default async function PropositionsPage({ searchParams }: PageProps) {
   const search = params.search || undefined;
   const cursor = params.cursor || undefined;
 
-  const { data } = await listMyPropositions(session.user.id, { statut, search, cursor, limit: 20 });
+  const { data: rawData } = await listMyPropositions(session.user.id, { statut, search, cursor, limit: 20 });
+
+  const data = rawData.map((m) => ({
+    ...m,
+    categorie: m.sens[0]?.categorie ?? null,
+  }));
 
   return (
     <div className="space-y-6">

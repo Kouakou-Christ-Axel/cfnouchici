@@ -16,10 +16,11 @@ export default async function Image({ params }: { params: Promise<{ slug: string
   }
 
   const motLabel = mot?.mot ?? "Nouchi";
-  const definition = mot?.definition
-    ? mot.definition.length > 100
-      ? mot.definition.slice(0, 97) + "…"
-      : mot.definition
+  const rawDefinition = mot?.sens?.[0]?.definition ?? "";
+  const definition = rawDefinition
+    ? rawDefinition.length > 100
+      ? rawDefinition.slice(0, 97) + "…"
+      : rawDefinition
     : "Dictionnaire du nouchi ivoirien";
 
   return new ImageResponse(

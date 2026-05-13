@@ -26,7 +26,7 @@ describe("recomputeMotScore", () => {
     await db.exemple.deleteMany();
     await db.mot.deleteMany();
     const mot = await db.mot.create({
-      data: { slug: "score-test", mot: "ScoreTest", definition: "def", statut: "VALIDE" },
+      data: { slug: "score-test", mot: "ScoreTest", statut: "VALIDE" },
     });
     motId = mot.id;
   });

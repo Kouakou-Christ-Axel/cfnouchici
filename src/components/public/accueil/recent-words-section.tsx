@@ -28,8 +28,8 @@ async function RecentWordsSection() {
               <RecentWordRow
                 slug={mot.slug}
                 mot={mot.mot}
-                definition={mot.definition}
-                categorie={mot.categorie}
+                definition={mot.sens[0]?.definition ?? ""}
+                categorie={mot.sens[0]?.categorie ?? null}
                 authorName={mot.soumisPar?.name ?? null}
                 createdAt={mot.createdAt}
                 index={index}

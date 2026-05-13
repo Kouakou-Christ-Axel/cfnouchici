@@ -37,26 +37,35 @@ async function main() {
   for (const word of words) {
     const slug = word.mot
       .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[̀-ͯ]/g, "")
       .toLowerCase()
       .replace(/[^a-z0-9\s-]/g, "")
       .replace(/\s+/g, "-");
 
-    await prisma.mot.upsert({
-      where: { slug },
-      update: {},
-      create: {
-        slug,
-        mot: word.mot,
-        definition: word.definition,
-        categorie: word.categorie,
-        statut: "VALIDE",
-        soumisParId: admin.id,
-        exemples: {
-          create: word.exemples.map((phrase) => ({ phrase })),
+    const existing = await prisma.mot.findUnique({ where: { slug } });
+    if (!existing) {
+      await prisma.mot.create({
+        data: {
+          slug,
+          mot: word.mot,
+          statut: "VALIDE",
+          soumisParId: admin.id,
+          sens: {
+            create: [
+              {
+                categorie: word.categorie,
+                definition: word.definition,
+                traductions: [],
+                ordre: 0,
+                exemples: {
+                  create: word.exemples.map((phrase) => ({ phrase })),
+                },
+              },
+            ],
+          },
         },
-      },
-    });
+      });
+    }
   }
 
   console.log(`Seeded ${words.length} words + admin user`);
