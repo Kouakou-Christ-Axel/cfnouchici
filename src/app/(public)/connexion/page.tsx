@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import { Card, CardContent } from "@/components/ui/card";
 import { ConnexionForm } from "@/components/public/connexion/connexion-form";
+
+export const metadata: Metadata = {
+  title: "Connexion | nouchi.ci",
+  description: "Connecte-toi pour proposer des mots au dictionnaire collaboratif du nouchi ivoirien.",
+};
 
 export default async function ConnexionPage({
   searchParams,

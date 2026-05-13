@@ -1,4 +1,10 @@
+import type { Metadata } from "next";
 import { ProposerForm } from "@/components/public/proposer/proposer-form";
+
+export const metadata: Metadata = {
+  title: "Proposer un mot | nouchi.ci",
+  description: "Contribue au dictionnaire nouchi en soumettant un nouveau mot. Ta proposition sera examinée par un modérateur avant publication.",
+};
 
 export default function ProposerPage() {
   return (
