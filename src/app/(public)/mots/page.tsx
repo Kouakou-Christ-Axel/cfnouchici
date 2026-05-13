@@ -16,7 +16,7 @@ import { ScrollToTop } from "@/components/ui/scroll-to-top";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Tous les mots — Nouchici",
+  title: "Tous les mots | nouchi.ci",
   description: "Explore le dictionnaire complet du nouchi ivoirien.",
 };
 

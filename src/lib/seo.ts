@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "https://nouchi.ci";
-const SITE_NAME = "Nouchici — Dictionnaire du nouchi ivoirien";
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "https://www.nouchi.ci";
+const SITE_NAME = "nouchi.ci";
 
 interface MotForSeo {
   slug: string;
@@ -12,7 +12,7 @@ interface MotForSeo {
 }
 
 export function buildMotMetadata(mot: MotForSeo): Metadata {
-  const title = `${mot.mot} — Définition nouchi | Nouchici`;
+  const title = `${mot.mot} — Définition nouchi | nouchi.ci`;
   const description = `Définition de "${mot.mot}" en nouchi ivoirien : ${mot.definition}`;
   const url = `${BASE_URL}/mots/${mot.slug}`;
 
@@ -46,7 +46,7 @@ export function buildMotJsonLd(mot: MotForSeo) {
     description: mot.definition,
     inDefinedTermSet: {
       "@type": "DefinedTermSet",
-      name: "Dictionnaire Nouchi — Nouchici",
+      name: "Dictionnaire Nouchi — nouchi.ci",
       url: BASE_URL,
     },
   };

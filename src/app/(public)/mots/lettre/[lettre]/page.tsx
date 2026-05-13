@@ -31,7 +31,7 @@ export async function generateMetadata({
 	const { lettre } = await params;
 	const letter = lettre.toUpperCase();
 	return {
-		title: `Mots en « ${letter} » — Nouchici`,
+		title: `Mots en « ${letter} » | nouchi.ci`,
 		description: `Tous les mots nouchi commençant par la lettre ${letter}.`,
 	};
 }

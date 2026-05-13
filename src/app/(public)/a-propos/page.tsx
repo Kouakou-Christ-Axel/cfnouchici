@@ -2,17 +2,17 @@ import type { Metadata } from "next";
 import { Separator } from "@/components/ui/separator";
 
 export const metadata: Metadata = {
-  title: "À propos — Nouchici",
+  title: "À propos | nouchi.ci",
   description:
-    "Nouchici est le dictionnaire collaboratif du nouchi, l'argot urbain de Côte d'Ivoire. Découvrez notre mission et comment contribuer.",
+    "nouchi.ci est le dictionnaire collaboratif du nouchi, l'argot urbain de Côte d'Ivoire. Découvrez notre mission et comment contribuer.",
   alternates: {
-    canonical: `${process.env.NEXT_PUBLIC_API_URL ?? "https://nouchi.ci"}/a-propos`,
+    canonical: `${process.env.NEXT_PUBLIC_API_URL ?? "https://www.nouchi.ci"}/a-propos`,
   },
   openGraph: {
-    title: "À propos de Nouchici",
+    title: "À propos de nouchi.ci",
     description:
-      "Nouchici est le dictionnaire collaboratif du nouchi, l'argot urbain de Côte d'Ivoire.",
-    url: `${process.env.NEXT_PUBLIC_API_URL ?? "https://nouchi.ci"}/a-propos`,
+      "nouchi.ci est le dictionnaire collaboratif du nouchi, l'argot urbain de Côte d'Ivoire.",
+    url: `${process.env.NEXT_PUBLIC_API_URL ?? "https://www.nouchi.ci"}/a-propos`,
     type: "website",
   },
 };
@@ -26,7 +26,7 @@ export default function AProposPage() {
           À propos
         </h1>
         <p className="text-xl text-muted-foreground leading-relaxed">
-          Nouchici est le dictionnaire collaboratif du nouchi — l&apos;argot urbain né à Abidjan, parlé dans toute la Côte d&apos;Ivoire et sa diaspora.
+          nouchi.ci est le dictionnaire collaboratif du nouchi — l&apos;argot urbain né à Abidjan, parlé dans toute la Côte d&apos;Ivoire et sa diaspora.
         </p>
       </header>
 
@@ -39,10 +39,10 @@ export default function AProposPage() {
             Le nouchi est une langue vivante, hybride et créative — mélange de français, de dioula, de bété et de dizaines d&apos;autres langues. Pourtant, il reste peu documenté, peu enseigné, souvent absent des références académiques.
           </p>
           <p>
-            Nouchici est né d&apos;un constat simple : cette langue mérite une référence sérieuse, contrôlée depuis la Côte d&apos;Ivoire, accessible à tous — qu&apos;on soit à Yopougon, à Paris ou à Montréal.
+            nouchi.ci est né d&apos;un constat simple : cette langue mérite une référence sérieuse, contrôlée depuis la Côte d&apos;Ivoire, accessible à tous — qu&apos;on soit à Yopougon, à Paris ou à Montréal.
           </p>
           <p>
-            Chaque fiche mot est rédigée avec soin : définition claire, exemple d&apos;usage réel, catégorie grammaticale. L&apos;objectif est que n&apos;importe quel journaliste, chercheur ou créateur puisse citer Nouchici comme source.
+            Chaque fiche mot est rédigée avec soin : définition claire, exemple d&apos;usage réel, catégorie grammaticale. L&apos;objectif est que n&apos;importe quel journaliste, chercheur ou créateur puisse citer nouchi.ci comme source.
           </p>
         </div>
       </section>
@@ -67,7 +67,7 @@ export default function AProposPage() {
         <h2 className="text-2xl font-semibold">L&apos;équipe</h2>
         <div className="space-y-3 text-muted-foreground leading-relaxed">
           <p>
-            Nouchici est un projet indépendant fondé par <strong className="text-foreground">Axel Kouakou</strong>, développeur et passionné de linguistique urbaine.
+            nouchi.ci est un projet indépendant fondé par <strong className="text-foreground">Axel Kouakou</strong>, développeur et passionné de linguistique urbaine.
           </p>
           <p>
             Le projet est communautaire par nature : les mots sont soumis et validés par des locuteurs natifs.

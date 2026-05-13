@@ -32,7 +32,7 @@ export function UserOverview({ name, stats }: UserOverviewProps) {
         <h1 className="font-(family-name:--font-heading) text-3xl font-extrabold tracking-tight">
           Bonjour {name} 👋
         </h1>
-        <p className="text-muted-foreground text-sm">Voici un aperçu de ton activité sur Nouchici.</p>
+        <p className="text-muted-foreground text-sm">Voici un aperçu de ton activité sur nouchi.ci.</p>
       </header>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

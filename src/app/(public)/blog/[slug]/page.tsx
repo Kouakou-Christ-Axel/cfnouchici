@@ -29,7 +29,7 @@ export async function generateMetadata({
 	const post = posts.find((p) => p.slug === slug);
 	if (!post) return {};
 	return {
-		title: `${post.title} — Nouchici`,
+		title: `${post.title} | nouchi.ci`,
 		description: post.excerpt,
 		openGraph: {
 			title: post.title,
