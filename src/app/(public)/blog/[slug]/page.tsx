@@ -53,6 +53,38 @@ export default async function BlogDetailsPage({
 	const formattedDate = format(parseISO(post.date), "d MMMM yyyy", {locale: fr});
 
 	/* Convertit le "body" markdown-like en paragraphes/titres simples */
+	const renderInline = (text: string): React.ReactNode => {
+		const boldChunks = text.split(/(\*\*.*?\*\*)/g);
+		return (
+			<>
+				{boldChunks.map((chunk, i) => {
+					if (chunk.startsWith("**") && chunk.endsWith("**")) {
+						return (
+							<strong key={i} className="font-semibold text-foreground">
+								{chunk.slice(2, -2)}
+							</strong>
+						);
+					}
+					const linkChunks = chunk.split(/\[\[([\w-]+)\]\]/g);
+					return linkChunks.map((part, j) => {
+						if (j % 2 === 1) {
+							return (
+								<Link
+									key={`${i}-${j}`}
+									href={`/mots/${part}`}
+									className="font-medium underline underline-offset-2 decoration-muted-foreground hover:decoration-foreground transition-colors"
+								>
+									{part}
+								</Link>
+							);
+						}
+						return part;
+					});
+				})}
+			</>
+		);
+	};
+
 	const renderBody = (body: string) =>
 		body.split("\n\n").map((block, i) => {
 			if (block.startsWith("## ")) {
@@ -72,19 +104,9 @@ export default async function BlogDetailsPage({
 					</blockquote>
 				);
 			}
-			/* Gras inline **text** */
-			const parts = block.split(/\*\*(.*?)\*\*/g);
 			return (
 				<p key={i} className="leading-7 text-muted-foreground">
-					{parts.map((part, j) =>
-						j % 2 === 1 ? (
-							<strong key={j} className="font-semibold text-foreground">
-								{part}
-							</strong>
-						) : (
-							part
-						)
-					)}
+					{renderInline(block)}
 				</p>
 			);
 		});

@@ -105,7 +105,7 @@ Aller droit au but, sans détour. S'utilise pour demander à quelqu'un d'arrête
 		readTime: 6,
 		author: { name: "Fatou Diallo", avatar: "https://avatar.vercel.sh/fatou" },
 		cover: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800&q=80",
-		body: `La musique ivoirienne et le nouchi entretiennent une relation symbiotique. L'un ne va pas sans l'autre. Des premières chansons zouglou aux tubes coupé-décalé, la langue de la rue a toujours été au cœur des paroles.
+		body: `La musique ivoirienne et le nouchi entretiennent une relation symbiotique. L'un ne va pas sans l'autre. Des premières chansons [[zouglou]] aux tubes coupé-décalé, la langue de la rue a toujours été au cœur des paroles.
 
 ## Le zouglou, berceau du nouchi musical
 
@@ -123,13 +123,13 @@ Aujourd'hui, des artistes comme Suspect 95 portent le nouchi sur les plateformes
 		slug: "contribuer-dictionnaire",
 		title: "Comment contribuer au dictionnaire et faire vivre notre langue",
 		excerpt:
-			"Guide pratique pour ajouter un mot, valider une définition et participer à la communauté Nouchici.",
+			"Guide pratique pour ajouter un mot, valider une définition et participer à la communauté nouchi.ci.",
 		category: "Guide",
 		date: "2026-01-05",
 		readTime: 3,
 		author: { name: "Konan Djè", avatar: "https://avatar.vercel.sh/konan" },
 		cover: "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=800&q=80",
-		body: `Nouchici est un projet communautaire. Chaque mot ajouté, chaque définition validée, chaque exemple proposé enrichit notre patrimoine linguistique commun. Voici comment participer.
+		body: `nouchi.ci est un projet communautaire. Chaque mot ajouté, chaque définition validée, chaque exemple proposé enrichit notre patrimoine linguistique commun. Voici comment participer.
 
 ## Étape 1 : Créer un compte
 
